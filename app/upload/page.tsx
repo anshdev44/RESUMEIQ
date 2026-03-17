@@ -1,7 +1,11 @@
 "use client";
 
+import { redirect } from "next/navigation";
 import Link from "next/link";
 import { useState, useCallback, useRef } from "react";
+import { useSession, signIn, signOut } from "next-auth/react";
+
+
 
 interface UploadResult {
   success: boolean;
@@ -127,7 +131,8 @@ export default function UploadPage() {
   const [uploading, setUploading] = useState(false);
   const [uploadResult, setUploadResult] = useState<UploadResult | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [resumetext, setResumetext] = useState("");
+  const { data: session } = useSession();
+  // const [resumetext, setResumetext] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const allowedTypes = [
@@ -136,6 +141,10 @@ export default function UploadPage() {
     "application/msword",
     "text/plain",
   ];
+
+  const handleredirect = ()=>{
+    redirect("/analysis")
+  }
 
   const validateFile = useCallback(
     (f: File): string | null => {
@@ -196,6 +205,7 @@ export default function UploadPage() {
     },
     [handleFile],
   );
+  
 
   const handleUpload = async () => {
     if (!file) return;
@@ -205,6 +215,12 @@ export default function UploadPage() {
     try {
       const formData = new FormData();
       formData.append("resume", file);
+      
+      // if(!session) {
+      //   redirect("/login");
+      //   return;
+      // }
+      
 
       const res = await fetch("/api/upload", {
         method: "POST",
@@ -212,37 +228,40 @@ export default function UploadPage() {
       });
 
       const data = await res.json();
-      // console.log(res);
 
       if (!res.ok) {
         setError(data.error || "Upload failed");
         return;
       }
 
-      const res_1 = await fetch("/api/analyze", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          text: data.extractedText,
-        }),
-      });
+      console.log("✅ text extracted a successfully")
 
-      const data_1=await res_1.json();
-      if(res_1.ok){
-        setError(data_1.error || "Error Analyzing");
-      }
+        // const res_1 = await fetch("/api/analyze", {
+        //   method: "POST",
+        //   headers: {
+        //     "Content-Type": "application/json",
+        //   },
+        //   body: JSON.stringify({
+        //     text: data.extractedText,
+        //   }),
+        // });
+
+        // const data_1 = await res_1.json();
+        // if (!res_1.ok) {
+        //   setError(data_1.error || "Error Analyzing");
+        //   return;
+        // }
 
       setUploadResult(data);
-      setResumetext(data.extractedText);
-    } catch {
+    
+      // setResumetext(data.extractedText);
+      // setAnalysis(data_1);
+    } catch (error) {
       setError("Network error. Please try again.");
     } finally {
       setUploading(false);
     }
   };
-
   const resetUpload = () => {
     setFile(null);
     setUploadResult(null);
@@ -636,7 +655,11 @@ export default function UploadPage() {
               <p style={{ color: "#9ca3af", fontSize: 14, marginBottom: 32 }}>
                 Your resume is being analyzed. Results will appear shortly.
               </p>
-              <p>{resumetext}</p>
+             <div>
+              <button onClick={()=>{handleredirect()}} className="w-20 h-20 border mx-auto p-10">
+                Click Here To See the Results
+              </button>
+             </div>
             </div>
           )}
         </div>
