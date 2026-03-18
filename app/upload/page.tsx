@@ -4,8 +4,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { useState, useCallback, useRef } from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
-
-
+import { NextResponse } from "next/server";
 
 interface UploadResult {
   success: boolean;
@@ -142,9 +141,9 @@ export default function UploadPage() {
     "text/plain",
   ];
 
-  const handleredirect = ()=>{
-    redirect("/analysis")
-  }
+  const handleredirect = () => {
+    redirect("/analysis");
+  };
 
   const validateFile = useCallback(
     (f: File): string | null => {
@@ -205,63 +204,130 @@ export default function UploadPage() {
     },
     [handleFile],
   );
-  
 
   const handleUpload = async () => {
     if (!file) return;
+
     setUploading(true);
     setError(null);
 
     try {
       const formData = new FormData();
       formData.append("resume", file);
-      
-      // if(!session) {
-      //   redirect("/login");
-      //   return;
-      // }
-      
 
-      const res = await fetch("/api/upload", {
+      const uploadRes = await fetch("/api/upload", {
         method: "POST",
         body: formData,
       });
 
-      const data = await res.json();
+      const uploadData = await uploadRes.json();
 
-      if (!res.ok) {
-        setError(data.error || "Upload failed");
+      if (!uploadRes.ok) {
+        setError(uploadData.error || "Upload failed");
         return;
       }
 
-      console.log("✅ text extracted a successfully")
+      console.log("✅ text extracted successfully");
 
-        // const res_1 = await fetch("/api/analyze", {
-        //   method: "POST",
-        //   headers: {
-        //     "Content-Type": "application/json",
-        //   },
-        //   body: JSON.stringify({
-        //     text: data.extractedText,
-        //   }),
-        // });
+      const email = session?.user?.email;
 
-        // const data_1 = await res_1.json();
-        // if (!res_1.ok) {
-        //   setError(data_1.error || "Error Analyzing");
-        //   return;
-        // }
+      if (!email) {
+        setError("User email not found");
+        return;
+      }
 
-      setUploadResult(data);
-    
-      // setResumetext(data.extractedText);
-      // setAnalysis(data_1);
+      // get user id
+      const userRes = await fetch("/api/finduserid", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      const userData = await userRes.json();
+
+      if (!userRes.ok) {
+        setError(userData.error || "Could not fetch user id");
+        return;
+      }
+
+      const user_id = userData.user_id;
+
+      if (!user_id) {
+        setError("User id not found in database");
+        return;
+      }
+
+      // check if resume exists
+      const checkRes = await fetch("/api/checkresume", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ user_id }),
+      });
+
+      const checkData = await checkRes.json();
+
+      if (!checkRes.ok) {
+        setError(checkData.error || "Error checking resume");
+        return;
+      }
+
+      if (!checkData.exists) {
+        const addRes = await fetch("/api/addresume", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            user_id,
+            file_name: `${session?.user?.name}_resume`,
+            resume_text: uploadData.extractedText,
+          }),
+        });
+
+        const addData = await addRes.json();
+
+        if (!addRes.ok) {
+          setError(addData.error || "Failed to add resume");
+          return;
+        }
+
+        console.log("✅ resume_text added successfully");
+      } else {
+        const updateRes = await fetch("/api/updateresume", {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            user_id,
+            file_name: `${session?.user?.name}_resume`,
+            resume_text: uploadData.extractedText,
+          }),
+        });
+
+        const updateData = await updateRes.json();
+
+        if (!updateRes.ok) {
+          setError(updateData.error || "Failed to update resume");
+          return;
+        }
+
+        console.log("✅ resume_text updated successfully");
+      }
+
+      setUploadResult(uploadData);
     } catch (error) {
+      console.error("Upload error:", error);
       setError("Network error. Please try again.");
     } finally {
       setUploading(false);
     }
   };
+
   const resetUpload = () => {
     setFile(null);
     setUploadResult(null);
@@ -655,11 +721,22 @@ export default function UploadPage() {
               <p style={{ color: "#9ca3af", fontSize: 14, marginBottom: 32 }}>
                 Your resume is being analyzed. Results will appear shortly.
               </p>
-             <div>
-              <button onClick={()=>{handleredirect()}} className="w-20 h-20 border mx-auto p-10">
-                Click Here To See the Results
-              </button>
-             </div>
+              <div>
+                <button
+                  onClick={handleredirect}
+                  className="group relative mx-auto flex items-center justify-center px-8 py-4 
+  border-2 border-black text-black font-semibold tracking-wide 
+  hover:bg-black hover:text-white transition-all duration-300 
+  rounded-xl shadow-sm hover:shadow-lg cursor-pointer"
+                >
+                  <span className="relative z-10">View Results</span>
+
+                  <span
+                    className="absolute inset-0 scale-0 bg-black rounded-xl 
+  transition-transform duration-300 group-hover:scale-100"
+                  ></span>
+                </button>
+              </div>
             </div>
           )}
         </div>
