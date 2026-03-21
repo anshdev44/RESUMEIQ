@@ -4,6 +4,11 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
+import Component from "@/components/chart-radial-text";
+import ChartBarLabel from "@/components/bar-chart";
+import PieLabelCustom from "@/components/pie_chart";
+import Imporvements from "../components/imporvements";
+import { resume } from "react-dom/server";
 
 function ArrowRightIcon({ className = "w-4 h-4" }: { className?: string }) {
   return (
@@ -25,78 +30,129 @@ function ArrowRightIcon({ className = "w-4 h-4" }: { className?: string }) {
 
 const AnalysisPage = () => {
   const [showImprovements, setShowImprovements] = useState(false);
+  const [analysisData, setAnalysisData] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [overall_score, setOverall_score] = useState(0);
   const { data: session } = useSession();
+  const [button_loading, setButton_loading] = useState(false);
+  const [roles, setRoles] = useState<any[]>([]);
+  const [roleRelevance, setRoleRelevance] = useState([]);
+  const [resume_text, setResume_text] = useState("")
+  const [careerTime, setCareerTime] = useState({
+    work: 0,
+    education: 0,
+    projects: 0,
+    certifications: 0,
+  });
 
   const analyze = async () => {
+    if (button_loading) return;
+
+    setButton_loading(true);
+    setIsLoading(true);
+
     const email = session?.user?.email;
     if (!email) {
+      setButton_loading(false);
+      setIsLoading(false);
       console.log("analyze: missing sessiion/email", { session });
       return;
     }
 
-    console.log("analyze function started", { emal });
     const name = session?.user?.name ?? "user";
 
     try {
       const userRes = await fetch("/api/finduserid", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email,
-        }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
       });
-      console.log("finduserid response", { status: userRes.status });
 
       const userData = await userRes.json();
       if (!userRes.ok) {
-        console.error("finduserid error", userData);
+        setButton_loading(false);
+        setIsLoading(false);
         return;
       }
 
       const user_id = userData.user_id;
-      console.log("✅ user_id is", user_id);
 
       const resumeRes = await fetch("/api/findresumetext", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           user_id,
           file_name: `${name}_resume`,
         }),
       });
-      console.log("findresume_text response", { status: resumeRes.status });
 
       const resumeData = await resumeRes.json();
       if (!resumeRes.ok) {
-        console.error("findresume_text error", resumeData);
+        setButton_loading(false);
+        setIsLoading(false);
         return;
       }
+      setResume_text(resumeData);
+      // console.log("ye hai asli",resumeData);
       const res = await fetch("http://localhost:3000/api/analyze", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          resume_text: resumeData.resume_text,
-        }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: resumeData.resume_text }),
       });
 
-      const resume_text = resumeData.resume_text;
-      console.log("✅ resume_text is", resume_text);
+      const analysisResult = await res.json();
+      if (!res.ok) {
+        setButton_loading(false);
+        setIsLoading(false);
+        return;
+      }
+
+      const totalScore =
+        analysisResult?.analysis?.resume_quality_score?.total_score;
+      setRoles(analysisResult?.analysis?.role_relevance ?? []);
+
+      setOverall_score(totalScore);
+      setRoleRelevance(analysisResult?.analysis?.role_relevance);
+      // console.log("ye hai asli",roleRelevance);
+      setAnalysisData(analysisResult);
+      setCareerTime(analysisResult?.analysis?.career_time_distribution);
+      // console.log("ye hai asli",careerTime);
+      // console.log("FULL RESULT:", analysisResult);
+      // console.log("QUALITY:", analysisResult.resume_quality_score);
+      // console.log("TOTAL:", analysisResult.resume_quality_score?.total_score);
+      // console.log("Total score:", totalScore);
     } catch (error) {
       console.error("analyze error", error);
+    } finally {
+      setIsLoading(false);
+      setButton_loading(false);
     }
   };
 
   useEffect(() => {
-    console.log("useEffect session changed", { session });
     if (!session) return;
-    analyze().catch((err) => console.error("analyze failed", err));
   }, [session]);
+
+  // useEffect(() => {
+  //   console.log("useEffect session changed", { session });
+  //   if (!session) return;
+  //   setIsLoading(true);
+  //   // analyze().catch((err) => console.error("analyze failed", err));
+  // }, [session]);
+
+  const handleimprovements=async()=>{
+    setShowImprovements(!showImprovements)
+    const res=await fetch("http://localhost:3000/api/getimprovements",{
+      method:"POST",
+      headers: { "Content-Type": "application/json" },
+      body: resume_text
+    })
+
+    if(!res){
+      return;
+    }
+    console.log(res.json());
+  }
 
   return (
     <div className="min-h-screen bg-white text-black font-sans ">
@@ -145,7 +201,7 @@ const AnalysisPage = () => {
               Analysis Complete
             </div>
             <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-4">
-              Alex Mitchell
+              {session?.user?.name}
             </h1>
             {/* <p className="text-xl md:text-2xl text-gray-500 font-medium">
               Senior Software Engineer
@@ -159,16 +215,26 @@ const AnalysisPage = () => {
               </p>
               <div className="flex items-baseline gap-1 justify-end">
                 <span className="text-5xl font-extrabold tracking-tighter">
-                  92
+                  {overall_score ?? 92}
                 </span>
                 <span className="text-2xl font-bold text-gray-300">/100</span>
               </div>
             </div>
           </div>
         </div>
+        <button
+          onClick={() => {
+            analyze();
+          }}
+          disabled={isLoading}
+          className="px-8 py-4 bg-black text-white rounded-full 
+  hover:bg-gray-800 transition-all disabled:opacity-50 cursor-pointer"
+        >
+          {isLoading ? "Analyzing..." : "Show Results"}
+        </button>
 
         {/* 3 Charts Section */}
-        <div className="mb-16 animate-fade-up delay-100">
+        <div className="mb-16 animate-fade-up delay-100 ">
           <div className="flex items-center justify-between mb-8">
             <h2 className="text-2xl font-bold tracking-tight">
               Performance Metrics
@@ -182,33 +248,24 @@ const AnalysisPage = () => {
                 <span className="text-gray-400">📊</span>
               </div>
               <h3 className="text-lg font-semibold mb-1">ATS Compatibility</h3>
-              <p className="text-sm text-gray-500 text-center">
-                [Chart 1 Space]
-              </p>
+              <div className="text-sm text-gray-500 text-center">
+                {/* <Radial_chart/> */}
+                <Component score={overall_score} />
+              </div>
             </div>
 
             {/* Box 2 */}
             <div className="h-72 rounded-3xl border border-gray-200 bg-white shadow-[0_2px_10px_rgba(0,0,0,0.02)] flex flex-col items-center justify-center p-6 relative overflow-hidden group hover:border-gray-300 transition-colors">
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-gray-200 to-gray-300" />
-              <div className="w-16 h-16 rounded-full bg-gray-50 border border-gray-100 flex items-center justify-center mb-4">
-                <span className="text-gray-400">📈</span>
-              </div>
-              <h3 className="text-lg font-semibold mb-1">Keyword Match</h3>
-              <p className="text-sm text-gray-500 text-center">
-                [Chart 2 Space]
-              </p>
+              <ChartBarLabel role={roleRelevance} />
             </div>
 
             {/* Box 3 */}
             <div className="h-72 rounded-3xl border border-gray-200 bg-white shadow-[0_2px_10px_rgba(0,0,0,0.02)] flex flex-col items-center justify-center p-6 relative overflow-hidden group hover:border-gray-300 transition-colors">
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-gray-200 to-gray-300" />
-              <div className="w-16 h-16 rounded-full bg-gray-50 border border-gray-100 flex items-center justify-center mb-4">
-                <span className="text-gray-400">🎯</span>
+              <div className="text-sm text-gray-500 text-center">
+                <PieLabelCustom ct={careerTime} />
               </div>
-              <h3 className="text-lg font-semibold mb-1">Impact Rating</h3>
-              <p className="text-sm text-gray-500 text-center">
-                [Chart 3 Space]
-              </p>
             </div>
           </div>
         </div>
@@ -216,8 +273,8 @@ const AnalysisPage = () => {
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 mb-16 pt-8 border-t border-gray-100 animate-fade-up delay-200">
           <button
-            onClick={() => setShowImprovements(!showImprovements)}
-            className="px-8 py-4 bg-black text-white rounded-full font-medium hover:bg-gray-800 transition-all shadow-lg shadow-black/10 flex items-center justify-center gap-2 group"
+            onClick={() => {handleimprovements()}}
+            className="cursor-pointer px-8 py-4 bg-black text-white rounded-full font-medium hover:bg-gray-800 transition-all shadow-lg shadow-black/10 flex items-center justify-center gap-2 group"
           >
             {showImprovements
               ? "Hide Improvements"
@@ -235,118 +292,9 @@ const AnalysisPage = () => {
 
         {/* Improvements Section (Conditional) */}
         {showImprovements && (
-          <div className="animate-fade-up">
-            <div className="flex items-center gap-3 mb-8">
-              <div className="w-10 h-10 rounded-full bg-red-50 text-red-500 flex items-center justify-center">
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-                  />
-                </svg>
-              </div>
-              <h2 className="text-3xl font-bold tracking-tight">
-                Critical Improvements
-              </h2>
-            </div>
-
-            <div className="grid gap-6">
-              {/* Card 1 */}
-              <div className="p-8 rounded-3xl border border-gray-200 bg-white shadow-sm hover:shadow-md transition-shadow">
-                <div className="flex items-start gap-4">
-                  <div className="mt-1 w-6 h-6 rounded-full bg-red-100 text-red-600 flex items-center justify-center flex-shrink-0 font-bold text-xs">
-                    1
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-bold mb-3">
-                      Quantify Your Achievements
-                    </h3>
-                    <p className="text-gray-600 leading-relaxed mb-4">
-                      Your experience section lists responsibilities but lacks
-                      measurable outcomes. Data-driven bullet points perform 40%
-                      better in ATS systems.
-                    </p>
-                    <div className="bg-gray-50 rounded-xl p-4 border border-gray-100">
-                      <p className="text-sm text-gray-500 mb-2 font-medium">
-                        Instead of:
-                      </p>
-                      <p className="text-gray-700 font-mono text-sm line-through opacity-70 mb-3">
-                        "Improved database performance and query speed."
-                      </p>
-                      <p className="text-sm text-gray-500 mb-2 font-medium">
-                        Try:
-                      </p>
-                      <p className="text-gray-900 font-mono text-sm font-medium">
-                        "Improved database query speed by 40% using Redis
-                        caching."
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Card 2 */}
-              <div className="p-8 rounded-3xl border border-gray-200 bg-white shadow-sm hover:shadow-md transition-shadow">
-                <div className="flex items-start gap-4">
-                  <div className="mt-1 w-6 h-6 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center flex-shrink-0 font-bold text-xs">
-                    2
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-bold mb-3">
-                      Missing Key Skills for Target Role
-                    </h3>
-                    <p className="text-gray-600 leading-relaxed mb-4">
-                      Based on current Senior Software Engineer job
-                      descriptions, you are missing several highly requested
-                      keywords.
-                    </p>
-                    <div className="flex flex-wrap gap-2">
-                      <span className="px-3 py-1.5 bg-orange-50 border border-orange-100 text-orange-700 rounded-lg text-sm font-medium">
-                        System Design
-                      </span>
-                      <span className="px-3 py-1.5 bg-orange-50 border border-orange-100 text-orange-700 rounded-lg text-sm font-medium">
-                        Microservices
-                      </span>
-                      <span className="px-3 py-1.5 bg-orange-50 border border-orange-100 text-orange-700 rounded-lg text-sm font-medium">
-                        CI/CD
-                      </span>
-                      <span className="px-3 py-1.5 bg-orange-50 border border-orange-100 text-orange-700 rounded-lg text-sm font-medium">
-                        GraphQL
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Card 3 */}
-              <div className="p-8 rounded-3xl border border-gray-200 bg-white shadow-sm hover:shadow-md transition-shadow">
-                <div className="flex items-start gap-4">
-                  <div className="mt-1 w-6 h-6 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center flex-shrink-0 font-bold text-xs">
-                    3
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-bold mb-3">
-                      Formatting Inconsistencies
-                    </h3>
-                    <p className="text-gray-600 leading-relaxed">
-                      Ensure consistent date formats throughout the document.
-                      Some entries use "MM/YYYY" while others use "Month Year".
-                      ATS parsers may fail to extract your total years of
-                      experience accurately.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+        <Imporvements/>
         )}
+      
       </main>
     </div>
   );

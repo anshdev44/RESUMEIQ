@@ -8,7 +8,7 @@ export async function POST(req: Request) {
     const [rows]: any = await db.query(
       "SELECT resume_text FROM Resumes WHERE user_id = ? AND file_name = ?",
       [user_id, file_name]
-    );
+  );
 
     if (rows.length === 0) {
       return NextResponse.json(
