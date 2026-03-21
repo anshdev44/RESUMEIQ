@@ -51,7 +51,7 @@ const ChartBarLabel = ({ role }: Props) => {
               fontSize={12}
               offset={12}
               position="top"
-              formatter={(value, entry: any) =>
+              formatter={(value: number, entry: any) =>
                 entry?.name ? `${entry.name}: ${value}` : value
               }
             />

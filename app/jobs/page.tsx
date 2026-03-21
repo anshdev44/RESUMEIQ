@@ -49,7 +49,7 @@ const JobsPage = () => {
                 Back to Analysis
             </Link>
             <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">Recommended Jobs</h1>
-            <p className="text-xl text-gray-500">Curated matches for <span className="text-black font-medium">Alex Mitchell</span> based on a 92/100 profile score.</p>
+            <p className="text-xl text-gray-500">Curated matches for <span className="text-black font-medium">{session?.user?.name}</span> based on a 92/100 profile score.</p>
         </div>
 
         <div className="grid gap-6 animate-fade-up delay-100">

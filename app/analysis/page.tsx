@@ -27,7 +27,20 @@ function ArrowRightIcon({ className = "w-4 h-4" }: { className?: string }) {
     </svg>
   );
 }
+type Improvement = {
+  heading: string;
+  priority: "High" | "Medium" | "Low";
+  issues: string[];
+  suggestions: string[];
+  example: {
+    original: string;
+    improved: string;
+  };
+};
 
+type ImprovementsData = {
+  improvements: Improvement[];
+};
 const AnalysisPage = () => {
   const [showImprovements, setShowImprovements] = useState(false);
   const [analysisData, setAnalysisData] = useState<any>(null);
@@ -37,7 +50,10 @@ const AnalysisPage = () => {
   const [button_loading, setButton_loading] = useState(false);
   const [roles, setRoles] = useState<any[]>([]);
   const [roleRelevance, setRoleRelevance] = useState([]);
-  const [resume_text, setResume_text] = useState("")
+  const [resume_text, setResume_text] = useState("");
+  const [improvements, setImprovements] = useState<ImprovementsData>({
+    improvements: [],
+  });
   const [careerTime, setCareerTime] = useState({
     work: 0,
     education: 0,
@@ -140,19 +156,25 @@ const AnalysisPage = () => {
   //   // analyze().catch((err) => console.error("analyze failed", err));
   // }, [session]);
 
-  const handleimprovements=async()=>{
-    setShowImprovements(!showImprovements)
-    const res=await fetch("http://localhost:3000/api/getimprovements",{
-      method:"POST",
-      headers: { "Content-Type": "application/json" },
-      body: resume_text
-    })
+  const handleimprovements = async () => {
+    if (!showImprovements) {
+      const res = await fetch("http://localhost:3000/api/getimprovements", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          text: resume_text,
+        }),
+      });
 
-    if(!res){
-      return;
+      if (!res) {
+        return;
+      }
+      const res_1 = await res.json();
+      console.log(res_1);
+      setImprovements({ improvements: res_1.data.improvements });
     }
-    console.log(res.json());
-  }
+    setShowImprovements(!showImprovements);
+  };
 
   return (
     <div className="min-h-screen bg-white text-black font-sans ">
@@ -243,7 +265,7 @@ const AnalysisPage = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Box 1 */}
             <div className="h-72 rounded-3xl border border-gray-200 bg-white shadow-[0_2px_10px_rgba(0,0,0,0.02)] flex flex-col items-center justify-center p-6 relative overflow-hidden group hover:border-gray-300 transition-colors">
-              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-gray-200 to-gray-300" />
+              <div className="absolute top-0 left-0 w-full h-1 bg-linear-to-r from-gray-200 to-gray-300" />
               <div className="w-16 h-16 rounded-full bg-gray-50 border border-gray-100 flex items-center justify-center mb-4">
                 <span className="text-gray-400">📊</span>
               </div>
@@ -256,13 +278,13 @@ const AnalysisPage = () => {
 
             {/* Box 2 */}
             <div className="h-72 rounded-3xl border border-gray-200 bg-white shadow-[0_2px_10px_rgba(0,0,0,0.02)] flex flex-col items-center justify-center p-6 relative overflow-hidden group hover:border-gray-300 transition-colors">
-              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-gray-200 to-gray-300" />
+              <div className="absolute top-0 left-0 w-full h-1 bg-linear-to-r from-gray-200 to-gray-300" />
               <ChartBarLabel role={roleRelevance} />
             </div>
 
             {/* Box 3 */}
             <div className="h-72 rounded-3xl border border-gray-200 bg-white shadow-[0_2px_10px_rgba(0,0,0,0.02)] flex flex-col items-center justify-center p-6 relative overflow-hidden group hover:border-gray-300 transition-colors">
-              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-gray-200 to-gray-300" />
+              <div className="absolute top-0 left-0 w-full h-1 bg-linear-to-r from-gray-200 to-gray-300" />
               <div className="text-sm text-gray-500 text-center">
                 <PieLabelCustom ct={careerTime} />
               </div>
@@ -273,7 +295,9 @@ const AnalysisPage = () => {
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 mb-16 pt-8 border-t border-gray-100 animate-fade-up delay-200">
           <button
-            onClick={() => {handleimprovements()}}
+            onClick={() => {
+              handleimprovements();
+            }}
             className="cursor-pointer px-8 py-4 bg-black text-white rounded-full font-medium hover:bg-gray-800 transition-all shadow-lg shadow-black/10 flex items-center justify-center gap-2 group"
           >
             {showImprovements
@@ -291,10 +315,7 @@ const AnalysisPage = () => {
         </div>
 
         {/* Improvements Section (Conditional) */}
-        {showImprovements && (
-        <Imporvements/>
-        )}
-      
+        {showImprovements && <Imporvements data={improvements} />}
       </main>
     </div>
   );
