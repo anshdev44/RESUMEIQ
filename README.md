@@ -1,36 +1,194 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🤖 AI Resume Analyzer
 
-## Getting Started
+An intelligent web application that analyzes resumes and provides actionable insights using AI. This project helps users improve their resumes, match them with job roles, and understand their strengths and gaps in a structured, visual way.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## 🚀 Features
+
+### 📊 Resume Quality Score
+
+* Evaluates resume based on:
+
+  * Formatting
+  * Section completeness
+  * Bullet point clarity
+  * Readability
+  * Length
+  * Grammar
+* Displays a **gauge chart** representing overall resume quality.
+
+### 🎯 Role Relevance Analysis
+
+* Matches extracted skills with job roles like:
+
+  * Frontend Developer
+  * Backend Developer
+  * Full Stack Developer
+* Visualized using a **bar graph** to show alignment with each role.
+
+### ⏳ Experience vs Learning Analysis
+
+* Breaks down time spent in:
+
+  * Work Experience
+  * Education
+  * Projects
+  * Certifications
+* Represented using a **pie chart**.
+
+### 🛠️ Resume Improvement Suggestions
+
+* AI-generated suggestions including:
+
+  * Missing skills
+  * Weak bullet points
+  * Better phrasing examples
+* Categorized by priority (High, Medium, Low)
+
+### 🔍 Job Matching System
+
+* Matches resumes with job listings
+* Provides:
+
+  * Match score
+  * Missing skills
+  * Job details
+
+---
+
+## 🧠 Tech Stack
+
+### Frontend
+
+* React / Next.js
+* Tailwind CSS
+* Recharts (for visualizations)
+
+### Backend
+
+* Node.js / Next.js API Routes
+
+### Database
+
+* Relational Database (MySQL / PostgreSQL)
+
+#### Schema:
+
+* **Users** (user_id, name, email, created_at)
+* **Resumes** (resume_id, user_id, file_name, resume_text, upload_date)
+* **Skills** (skill_id, skill_name, category)
+* **Jobs** (job_id, company_name, job_title, job_description, location, salary_range, posted_date, api_source)
+* **Resume_Job_Match** (match_id, resume_id, job_id, match_score, missing_skills, analysis_date)
+
+### AI / NLP
+
+* Resume parsing
+* Skill extraction
+* Text analysis for improvements
+
+---
+
+## ⚙️ How It Works
+
+1. User uploads a resume
+2. System extracts text and identifies:
+
+   * Skills
+   * Sections
+   * Experience
+3. AI analyzes resume and:
+
+   * Generates quality score
+   * Matches roles
+   * Suggests improvements
+4. Resume is compared with job listings
+5. Results are displayed using interactive graphs
+
+---
+
+## 📂 Project Structure
+
+```
+/app
+  /components
+  /api
+  /charts
+  /utils
+/database
+/models
+/public
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 💡 Key Highlights
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+* Clean and interactive UI with modern charts
+* Real-time analysis and feedback
+* AI-driven insights (not hardcoded logic)
+* Scalable database design for job matching
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## 🛠️ Setup Instructions
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Clone the repository
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+git clone https://github.com/your-username/ai-resume-analyzer.git
+```
 
-## Deploy on Vercel
+2. Install dependencies
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```
+npm install
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+3. Run the development server
+
+```
+npm run dev
+```
+
+4. Open in browser
+
+```
+http://localhost:3000
+```
+
+---
+
+## 📈 Future Improvements
+
+* Integration with real-time job APIs (India-specific jobs)
+* Advanced AI scoring models
+* Resume builder feature
+* Authentication & user dashboard
+* Export improved resume
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Feel free to fork the repo and submit a pull request.
+
+---
+
+## 📄 License
+
+This project is open-source and available under the MIT License.
+
+---
+
+## 👨‍💻 Author
+
+Developed by **Ansh Ahuja**
+
+---
+
+## ⭐ If you like this project
+
+Give it a star on GitHub and share it!
+
+---
