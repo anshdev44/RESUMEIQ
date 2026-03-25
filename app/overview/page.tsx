@@ -1,11 +1,10 @@
 "use client";
 
-import Link from "next/link";
 import { useState, useEffect } from "react";
-import { useSession, signIn, signOut } from "next-auth/react";
-import { Session } from "inspector/promises";
+import Link from "next/link";
+import { useSession, signOut } from "next-auth/react";
 
-/* ──────────────────────────── ICONS (inline SVG) ──────────────────────────── */
+/* ──────────────────────────── Icons (inline SVG) ──────────────────────────── */
 
 function FileTextIcon({ className = "w-6 h-6" }: { className?: string }) {
   return (
@@ -79,24 +78,6 @@ function BriefcaseIcon({ className = "w-6 h-6" }: { className?: string }) {
   );
 }
 
-function ArrowRightIcon({ className = "w-4 h-4" }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
-      />
-    </svg>
-  );
-}
-
 function UploadIcon({ className = "w-6 h-6" }: { className?: string }) {
   return (
     <svg
@@ -128,24 +109,6 @@ function CpuChipIcon({ className = "w-6 h-6" }: { className?: string }) {
         strokeLinecap="round"
         strokeLinejoin="round"
         d="M8.25 3v1.5M4.5 8.25H3m18 0h-1.5M4.5 12H3m18 0h-1.5m-15 3.75H3m18 0h-1.5M8.25 19.5V21M12 3v1.5m0 15V21m3.75-18v1.5m0 15V21m-9-1.5h10.5a2.25 2.25 0 0 0 2.25-2.25V6.75a2.25 2.25 0 0 0-2.25-2.25H6.75A2.25 2.25 0 0 0 4.5 6.75v10.5a2.25 2.25 0 0 0 2.25 2.25Zm.75-12h9v9h-9v-9Z"
-      />
-    </svg>
-  );
-}
-
-function RocketIcon({ className = "w-6 h-6" }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={1.5}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M15.59 14.37a6 6 0 0 1-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 0 0 6.16-12.12A14.98 14.98 0 0 0 9.631 8.41m5.96 5.96a14.926 14.926 0 0 1-5.841 2.58m-.119-8.54a6 6 0 0 0-7.381 5.84h4.8m2.581-5.84a14.927 14.927 0 0 0-2.58 5.84m2.699 2.7c-.103.021-.207.041-.311.06a15.09 15.09 0 0 1-2.448-2.448 14.9 14.9 0 0 1 .06-.312m-2.24 2.39a4.493 4.493 0 0 0-1.757 4.306 4.493 4.493 0 0 0 4.306-1.758M16.5 9a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z"
       />
     </svg>
   );
@@ -187,7 +150,25 @@ function CloseIcon({ className = "w-6 h-6" }: { className?: string }) {
   );
 }
 
-/* ──────── Centered container helper (inline styles bypass Tailwind layer issues) ──────── */
+function ArrowRightIcon({ className = "w-4 h-4" }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      strokeWidth={2}
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
+      />
+    </svg>
+  );
+}
+
+/* ──────── Centered container helper ──────── */
 
 const containerStyle: React.CSSProperties = {
   width: "100%",
@@ -239,7 +220,7 @@ function Navbar() {
         }}
       >
         {/* Logo */}
-        <Link href="/overview" className="flex items-center gap-2.5 group">
+        <Link href="/" className="flex items-center gap-2.5 group">
           <div
             style={{
               width: 36,
@@ -269,21 +250,21 @@ function Navbar() {
           style={{ fontSize: 14, color: "#6b7280" }}
         >
           <Link
-            href="/overview"
+            href="/"
             className="hover:text-black transition-colors"
             style={{ padding: "8px 0" }}
           >
-            Overview
+            Home
           </Link>
           <a
-            href="#features"
+            href="#what-is"
             className="hover:text-black transition-colors"
             style={{ padding: "8px 0" }}
           >
-            Features
+            Project
           </a>
           <a
-            href="#how-it-works"
+            href="#user-flow"
             className="hover:text-black transition-colors"
             style={{ padding: "8px 0" }}
           >
@@ -367,7 +348,7 @@ function Navbar() {
         >
           <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
             <Link
-              href="/overview"
+              href="/"
               style={{
                 fontSize: 16,
                 fontWeight: 500,
@@ -377,10 +358,10 @@ function Navbar() {
               className="text-gray-600 hover:text-black transition-colors"
               onClick={() => setMobileOpen(false)}
             >
-              Overview
+              Home
             </Link>
             <a
-              href="#features"
+              href="#what-is"
               style={{
                 fontSize: 16,
                 fontWeight: 500,
@@ -390,10 +371,10 @@ function Navbar() {
               className="text-gray-600 hover:text-black transition-colors"
               onClick={() => setMobileOpen(false)}
             >
-              Features
+              Project
             </a>
             <a
-              href="#how-it-works"
+              href="#user-flow"
               style={{
                 fontSize: 16,
                 fontWeight: 500,
@@ -450,9 +431,9 @@ function Navbar() {
   );
 }
 
-/* ──────────────────────────── HERO ──────────────────────────────────────── */
+/* ──────────────────────────── HERO SECTION ──────────────────────────────────────── */
 
-function Hero() {
+function HeroOverview() {
   return (
     <section
       style={{
@@ -465,17 +446,6 @@ function Hero() {
         paddingTop: 72,
       }}
     >
-      {/* Subtle grid background */}
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          opacity: 0.03,
-          backgroundImage: `linear-gradient(#000 1px, transparent 1px), linear-gradient(90deg, #000 1px, transparent 1px)`,
-          backgroundSize: "60px 60px",
-        }}
-      />
-
       {/* Gradient orb */}
       <div
         style={{
@@ -502,39 +472,7 @@ function Hero() {
           textAlign: "center",
         }}
       >
-        {/* Badge */}
-        <div
-          className="animate-fade-up"
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: 8,
-            padding: "8px 20px",
-            borderRadius: 9999,
-            border: "1px solid #e5e7eb",
-            backgroundColor: "#fff",
-            fontSize: 13,
-            fontWeight: 500,
-            color: "#6b7280",
-            marginBottom: 40,
-            boxShadow: "0 1px 2px rgba(0,0,0,0.04)",
-          }}
-        >
-          <span
-            style={{
-              width: 8,
-              height: 8,
-              borderRadius: "50%",
-              backgroundColor: "#000",
-            }}
-            className="animate-pulse"
-          />
-          AI-Powered Resume Analysis
-        </div>
-
-        {/* Headline */}
         <h1
-          className="animate-fade-up delay-100"
           style={{
             fontSize: "clamp(40px, 6vw, 72px)",
             fontWeight: 700,
@@ -542,14 +480,12 @@ function Hero() {
             lineHeight: 1.08,
           }}
         >
-          Your resume,
+          What is
           <br />
-          <span style={{ color: "#9ca3af" }}>perfected.</span>
+          <span style={{ color: "#9ca3af" }}>ResumeIQ?</span>
         </h1>
 
-        {/* Subtitle */}
         <p
-          className="animate-fade-up delay-200"
           style={{
             marginTop: 28,
             fontSize: "clamp(16px, 2vw, 20px)",
@@ -561,132 +497,19 @@ function Hero() {
             padding: "0 16px",
           }}
         >
-          Upload your resume and get instant, intelligent feedback. Beat ATS
-          filters and land more interviews.
+          An intelligent, end-to-end career assistance platform that helps you evaluate, improve, and match your resume with job opportunities.
         </p>
-
-        {/* CTA Buttons */}
-        <div
-          className="animate-fade-up delay-300"
-          style={{
-            marginTop: 48,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: 16,
-          }}
-        >
-          <Link
-            href="/upload"
-            className="group"
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 10,
-              backgroundColor: "#000",
-              color: "#fff",
-              width: "100%",
-              maxWidth: 280,
-              padding: "16px 40px",
-              borderRadius: 9999,
-              fontSize: 16,
-              fontWeight: 500,
-              textDecoration: "none",
-            }}
-          >
-            Get started free
-            <ArrowRightIcon className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
-          </Link>
-          <a
-            href="#features"
-            style={{
-              fontSize: 16,
-              fontWeight: 500,
-              color: "#6b7280",
-              padding: "16px 32px",
-              textDecoration: "none",
-            }}
-            className="hover:text-black transition-colors"
-          >
-            Learn more ↓
-          </a>
-        </div>
-
-        {/* Stats strip */}
-        <div
-          className="animate-fade-up delay-500"
-          style={{
-            marginTop: 80,
-            display: "flex",
-            flexWrap: "wrap",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: "32px 56px",
-            textAlign: "center",
-          }}
-        >
-          {[
-            { value: "50K+", label: "Resumes analyzed" },
-            { value: "93%", label: "Success rate" },
-            { value: "< 30s", label: "Analysis time" },
-          ].map((stat) => (
-            <div key={stat.label} style={{ minWidth: 100 }}>
-              <p
-                style={{
-                  fontSize: 28,
-                  fontWeight: 700,
-                  letterSpacing: "-0.02em",
-                }}
-              >
-                {stat.value}
-              </p>
-              <p style={{ fontSize: 13, color: "#9ca3af", marginTop: 4 }}>
-                {stat.label}
-              </p>
-            </div>
-          ))}
-        </div>
       </div>
     </section>
   );
 }
 
-/* ──────────────────────────── FEATURES ──────────────────────────────────── */
+/* ──────────────────────────── WHAT IS RESUME IQ ──────────────────────────────────────── */
 
-const features = [
-  {
-    icon: FileTextIcon,
-    title: "AI Analysis",
-    description:
-      "Deep analysis of content, structure, and formatting powered by advanced AI models.",
-  },
-  {
-    icon: ChartBarIcon,
-    title: "ATS Scoring",
-    description:
-      "See exactly how your resume performs against Applicant Tracking Systems.",
-  },
-  {
-    icon: SparklesIcon,
-    title: "Smart Suggestions",
-    description:
-      "Actionable, personalized recommendations to make your resume stand out.",
-  },
-  {
-    icon: BriefcaseIcon,
-    title: "Job Recommendations",
-    description:
-      "Get matched with relevant job openings based on your resume skills and experience.",
-  },
-];
-
-function Features() {
+function WhatIsResumeIQ() {
   return (
-    <section id="features" style={{ padding: "96px 0" }}>
-      <div style={containerStyle}>
-        {/* Section header */}
+    <section id="what-is" style={{ padding: "96px 0", backgroundColor: "#fafafa" }}>
+      <div style={containerNarrowStyle}>
         <div style={{ textAlign: "center", marginBottom: 80 }}>
           <p
             style={{
@@ -698,7 +521,7 @@ function Features() {
               marginBottom: 12,
             }}
           >
-            Features
+            Project Overview
           </p>
           <h2
             style={{
@@ -707,23 +530,239 @@ function Features() {
               letterSpacing: "-0.02em",
             }}
           >
-            Everything you need
+            The Complete Solution
+          </h2>
+        </div>
+
+        <div
+          style={{
+            display: "grid",
+            gap: 32,
+            marginBottom: 60,
+          }}
+        >
+          {/* Core Description */}
+          <div
+            style={{
+              padding: 32,
+              borderRadius: 16,
+              border: "1px solid #e5e7eb",
+              backgroundColor: "#fff",
+            }}
+          >
+            <h3 style={{ fontSize: 20, fontWeight: 600, marginBottom: 16 }}>Your Resume, Elevated</h3>
+            <p style={{ color: "#6b7280", fontSize: 16, lineHeight: 1.7, marginBottom: 20 }}>
+              ResumeIQ is an AI-powered resume analysis platform that helps job seekers understand their resume quality, identify gaps, and match with relevant opportunities. Upload your resume in PDF, DOCX, or text format, and get instant insights about your professional profile.
+            </p>
+            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+              <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
+                <span style={{ color: "#000", fontWeight: 700 }}>✓</span>
+                <span style={{ color: "#6b7280" }}>AI-powered analysis using Google Gemini</span>
+              </div>
+              <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
+                <span style={{ color: "#000", fontWeight: 700 }}>✓</span>
+                <span style={{ color: "#6b7280" }}>Extracts skills, experience, education, and certifications</span>
+              </div>
+              <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
+                <span style={{ color: "#000", fontWeight: 700 }}>✓</span>
+                <span style={{ color: "#6b7280" }}>Matches you with job roles and opportunities</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ──────────────────────────── USER FLOW ──────────────────────────────────────── */
+
+function UserFlow() {
+  const flowSteps = [
+    {
+      icon: UploadIcon,
+      title: "User Input",
+      description: "Upload your resume (PDF, DOCX, or text) and optionally specify a target role or job description.",
+      details: [
+        "Upload resume in multiple formats",
+        "Define career goals",
+        "Target specific roles",
+      ],
+    },
+    {
+      icon: CpuChipIcon,
+      title: "Processing Engine",
+      description: "Our AI extracts text, analyzes structure, evaluates ATS compatibility, and extracts skills and keywords.",
+      details: [
+        "Parse resume sections",
+        "ATS + formatting checks",
+        "Skill/keyword extraction",
+      ],
+    },
+    {
+      icon: FileTextIcon,
+      title: "Outputs & Insights",
+      description: "Get a comprehensive report with scores, suggestions, and matched job opportunities.",
+      details: [
+        "ATS score + highlights",
+        "Skill gaps + improvements",
+        "Job match scores",
+      ],
+    },
+  ];
+
+  return (
+    <section id="user-flow" style={{ padding: "96px 0" }}>
+      <div style={containerStyle}>
+        <div style={{ textAlign: "center", marginBottom: 80 }}>
+          <p
+            style={{
+              fontSize: 12,
+              fontWeight: 500,
+              letterSpacing: "0.1em",
+              textTransform: "uppercase",
+              color: "#9ca3af",
+              marginBottom: 12,
+            }}
+          >
+            End-to-End Flow
+          </p>
+          <h2
+            style={{
+              fontSize: "clamp(28px, 4vw, 40px)",
+              fontWeight: 700,
+              letterSpacing: "-0.02em",
+            }}
+          >
+            From Upload to Insight
           </h2>
           <p
             style={{
               color: "#6b7280",
               marginTop: 16,
-              maxWidth: 448,
+              maxWidth: 500,
               marginLeft: "auto",
               marginRight: "auto",
               fontSize: 16,
             }}
           >
-            Powerful tools to transform your resume from good to exceptional.
+            The complete journey: what you do, what the system processes, and what you get.
           </p>
         </div>
 
-        {/* Cards */}
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+            gap: 40,
+          }}
+        >
+          {flowSteps.map((step, idx) => (
+            <div key={step.title} style={{ textAlign: "center" }}>
+              <div
+                style={{
+                  width: 64,
+                  height: 64,
+                  backgroundColor: "#f9fafb",
+                  border: "1px solid #e5e7eb",
+                  borderRadius: 12,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  marginLeft: "auto",
+                  marginRight: "auto",
+                  marginBottom: 24,
+                }}
+              >
+                <step.icon className="w-8 h-8" />
+              </div>
+
+              <h3 style={{ fontSize: 20, fontWeight: 600, marginBottom: 12 }}>{step.title}</h3>
+              <p style={{ color: "#6b7280", fontSize: 14, lineHeight: 1.6, marginBottom: 20 }}>
+                {step.description}
+              </p>
+
+              <ul style={{ textAlign: "left", fontSize: 13, color: "#6b7280" }}>
+                {step.details.map((detail) => (
+                  <li key={detail} style={{ marginBottom: 8, paddingLeft: 20, position: "relative" }}>
+                    <span style={{ position: "absolute", left: 0 }}>•</span>
+                    {detail}
+                  </li>
+                ))}
+              </ul>
+
+              {idx < flowSteps.length - 1 && (
+                <div
+                  style={{
+                    marginTop: 32,
+                    fontSize: 20,
+                    color: "#d1d5db",
+                  }}
+                >
+                  ↓
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ──────────────────────────── KEY FEATURES ──────────────────────────────────────── */
+
+function KeyFeatures() {
+  const features = [
+    {
+      icon: ChartBarIcon,
+      title: "Resume Quality Score",
+      items: ["Formatting (20)", "Sections (20)", "Bullet Points (15)", "Readability (20)", "Length (10)", "Grammar (15)"],
+    },
+    {
+      icon: SparklesIcon,
+      title: "Role Relevance Match",
+      items: ["4 best-fit roles", "Skill-based matching", "Score ranking", "Career guidance"],
+    },
+    {
+      icon: FileTextIcon,
+      title: "Experience Analysis",
+      items: ["Work experience", "Education breakdown", "Projects & portfolio", "Certifications"],
+    },
+    {
+      icon: BriefcaseIcon,
+      title: "Job Matching",
+      items: ["Job recommendations", "Match percentage", "Skill gap identification", "Missing keywords"],
+    },
+  ];
+
+  return (
+    <section style={{ padding: "96px 0", backgroundColor: "#fafafa" }}>
+      <div style={containerStyle}>
+        <div style={{ textAlign: "center", marginBottom: 80 }}>
+          <p
+            style={{
+              fontSize: 12,
+              fontWeight: 500,
+              letterSpacing: "0.1em",
+              textTransform: "uppercase",
+              color: "#9ca3af",
+              marginBottom: 12,
+            }}
+          >
+            Key Features
+          </p>
+          <h2
+            style={{
+              fontSize: "clamp(28px, 4vw, 40px)",
+              fontWeight: 700,
+              letterSpacing: "-0.02em",
+            }}
+          >
+            Comprehensive Analysis
+          </h2>
+        </div>
+
         <div
           style={{
             display: "grid",
@@ -742,9 +781,8 @@ function Features() {
                 backgroundColor: "#fff",
               }}
             >
-              {/* Icon */}
               <div
-                className="group-hover:bg-black group-hover:text-white group-hover:border-black transition-all duration-300"
+                className="group-hover:bg-black group-hover:text-white transition-all duration-300"
                 style={{
                   width: 56,
                   height: 56,
@@ -760,12 +798,18 @@ function Features() {
                 <feature.icon className="w-6 h-6" />
               </div>
 
-              <h3 style={{ fontSize: 18, fontWeight: 600, marginBottom: 8 }}>
+              <h3 style={{ fontSize: 18, fontWeight: 600, marginBottom: 16 }}>
                 {feature.title}
               </h3>
-              <p style={{ color: "#6b7280", fontSize: 14, lineHeight: 1.7 }}>
-                {feature.description}
-              </p>
+
+              <ul style={{ fontSize: 13, color: "#6b7280" }}>
+                {feature.items.map((item) => (
+                  <li key={item} style={{ marginBottom: 8, paddingLeft: 16, position: "relative" }}>
+                    <span style={{ position: "absolute", left: 0 }}>→</span>
+                    {item}
+                  </li>
+                ))}
+              </ul>
             </div>
           ))}
         </div>
@@ -774,40 +818,13 @@ function Features() {
   );
 }
 
-/* ──────────────────────────── HOW IT WORKS ──────────────────────────────── */
+/* ──────────────────────────── WHY IT HELPS ──────────────────────────────────────── */
 
-const steps = [
-  {
-    icon: UploadIcon,
-    step: "01",
-    title: "Upload",
-    description: "Drop your resume in PDF, DOCX, or plain text format.",
-  },
-  {
-    icon: CpuChipIcon,
-    step: "02",
-    title: "Analyze",
-    description:
-      "Our AI scans structure, keywords, readability, and ATS compatibility.",
-  },
-  {
-    icon: RocketIcon,
-    step: "03",
-    title: "Improve",
-    description:
-      "Get a detailed report with scores and actionable suggestions.",
-  },
-];
-
-function HowItWorks() {
+function WhyItHelps() {
   return (
-    <section
-      id="how-it-works"
-      style={{ padding: "96px 0", backgroundColor: "rgba(249,250,251,0.6)" }}
-    >
+    <section style={{ padding: "96px 0" }}>
       <div style={containerNarrowStyle}>
-        {/* Section header */}
-        <div style={{ textAlign: "center", marginBottom: 80 }}>
+        <div style={{ textAlign: "center", marginBottom: 60 }}>
           <p
             style={{
               fontSize: 12,
@@ -818,7 +835,7 @@ function HowItWorks() {
               marginBottom: 12,
             }}
           >
-            Process
+            Impact
           </p>
           <h2
             style={{
@@ -827,92 +844,54 @@ function HowItWorks() {
               letterSpacing: "-0.02em",
             }}
           >
-            Three simple steps
+            Why ResumeIQ Matters
           </h2>
-          <p
-            style={{
-              color: "#6b7280",
-              marginTop: 16,
-              maxWidth: 448,
-              marginLeft: "auto",
-              marginRight: "auto",
-              fontSize: 16,
-            }}
-          >
-            From upload to actionable insight — it takes under a minute.
-          </p>
         </div>
 
-        {/* Steps */}
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+            gridTemplateColumns: "1fr 1fr",
             gap: 40,
           }}
+          className="grid-cols-1 md:grid-cols-2"
         >
-          {steps.map((item) => (
-            <div key={item.step} style={{ textAlign: "center" }}>
-              {/* Step number */}
-              <span
-                style={{
-                  fontSize: 100,
-                  fontWeight: 700,
-                  lineHeight: 1,
-                  color: "#f3f4f6",
-                  display: "block",
-                  userSelect: "none",
-                }}
-              >
-                {item.step}
-              </span>
+          <div>
+            <h3 style={{ fontSize: 20, fontWeight: 600, marginBottom: 16, color: "#000" }}>
+              For Job Seekers
+            </h3>
+            <ul style={{ fontSize: 15, color: "#6b7280", lineHeight: 1.8 }}>
+              <li style={{ marginBottom: 12 }}>✓ Beat ATS filters with optimization guidance</li>
+              <li style={{ marginBottom: 12 }}>✓ Understand strengths and skill gaps</li>
+              <li style={{ marginBottom: 12 }}>✓ Discover roles that match your profile</li>
+              <li style={{ marginBottom: 12 }}>✓ Get AI-powered improvement suggestions</li>
+              <li>✓ Track progress over multiple resume iterations</li>
+            </ul>
+          </div>
 
-              {/* Icon */}
-              <div
-                style={{
-                  width: 64,
-                  height: 64,
-                  borderRadius: "50%",
-                  backgroundColor: "#000",
-                  color: "#fff",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  margin: "-32px auto 24px",
-                  boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-                }}
-              >
-                <item.icon className="w-7 h-7" />
-              </div>
-
-              <h3 style={{ fontSize: 20, fontWeight: 600, marginBottom: 12 }}>
-                {item.title}
-              </h3>
-              <p
-                style={{
-                  color: "#6b7280",
-                  fontSize: 15,
-                  lineHeight: 1.7,
-                  maxWidth: 280,
-                  marginLeft: "auto",
-                  marginRight: "auto",
-                }}
-              >
-                {item.description}
-              </p>
-            </div>
-          ))}
+          <div>
+            <h3 style={{ fontSize: 20, fontWeight: 600, marginBottom: 16, color: "#000" }}>
+              The ResumeIQ Advantage
+            </h3>
+            <ul style={{ fontSize: 15, color: "#6b7280", lineHeight: 1.8 }}>
+              <li style={{ marginBottom: 12 }}>✓ Simple upload → get insights in seconds</li>
+              <li style={{ marginBottom: 12 }}>✓ Actionable, not just scores</li>
+              <li style={{ marginBottom: 12 }}>✓ Job matching based on real skills</li>
+              <li style={{ marginBottom: 12 }}>✓ Beautiful, intuitive interface</li>
+              <li>✓ Data-driven career guidance</li>
+            </ul>
+          </div>
         </div>
       </div>
     </section>
   );
 }
 
-/* ──────────────────────────── CTA SECTION ──────────────────────────────── */
+/* ──────────────────────────── CTA ──────────────────────────────────────── */
 
 function CTA() {
   return (
-    <section style={{ padding: "96px 0" }}>
+    <section style={{ padding: "96px 0", backgroundColor: "#fafafa" }}>
       <div style={{ ...containerNarrowStyle, maxWidth: 896 }}>
         <div
           style={{
@@ -924,157 +903,72 @@ function CTA() {
             overflow: "hidden",
           }}
         >
-          {/* Decorative dots */}
-          <div
+          <h2
             style={{
-              position: "absolute",
-              inset: 0,
-              opacity: 0.05,
-              backgroundImage: `radial-gradient(circle, #fff 1px, transparent 1px)`,
-              backgroundSize: "24px 24px",
+              position: "relative",
+              fontSize: "clamp(32px, 5vw, 48px)",
+              fontWeight: 700,
+              color: "#fff",
+              letterSpacing: "-0.02em",
+              marginBottom: 24,
             }}
-          />
+          >
+            Ready to Optimize Your Resume?
+          </h2>
 
-          <div style={{ position: "relative" }}>
-            <h2
-              style={{
-                fontSize: "clamp(28px, 4vw, 48px)",
-                fontWeight: 700,
-                color: "#fff",
-                letterSpacing: "-0.02em",
-                lineHeight: 1.2,
-              }}
-            >
-              Ready to perfect
-              <br />
-              your resume?
-            </h2>
-            <p
-              style={{
-                color: "#9ca3af",
-                marginTop: 20,
-                maxWidth: 512,
-                marginLeft: "auto",
-                marginRight: "auto",
-                fontSize: 17,
-              }}
-            >
-              Join thousands of job seekers who&apos;ve improved their resumes
-              with ResumeIQ.
-            </p>
-            <Link
-              href="/upload"
-              className="group"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 10,
-                marginTop: 40,
-                backgroundColor: "#fff",
-                color: "#000",
-                padding: "16px 40px",
-                borderRadius: 9999,
-                fontSize: 16,
-                fontWeight: 500,
-                textDecoration: "none",
-              }}
-            >
-              Start for free
-              <ArrowRightIcon className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
-            </Link>
-          </div>
+          <p
+            style={{
+              position: "relative",
+              fontSize: 16,
+              color: "#d1d5db",
+              maxWidth: 500,
+              marginLeft: "auto",
+              marginRight: "auto",
+              marginBottom: 40,
+            }}
+          >
+            Upload your resume now and get instant, AI-powered feedback to land more interviews.
+          </p>
+
+          <Link
+            href="/upload"
+            style={{
+              position: "relative",
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 10,
+              backgroundColor: "#fff",
+              color: "#000",
+              padding: "16px 40px",
+              borderRadius: 9999,
+              fontSize: 16,
+              fontWeight: 600,
+              textDecoration: "none",
+            }}
+            className="hover:shadow-lg hover:scale-105 transition-all group"
+          >
+            Get Started
+            <ArrowRightIcon className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+          </Link>
         </div>
       </div>
     </section>
   );
 }
 
-/* ──────────────────────────── FOOTER ──────────────────────────────────── */
-
-function Footer() {
-  return (
-    <footer style={{ borderTop: "1px solid #e5e7eb", padding: "48px 0" }}>
-      <div
-        style={{
-          ...containerStyle,
-          display: "flex",
-          flexWrap: "wrap",
-          alignItems: "center",
-          justifyContent: "space-between",
-          gap: 24,
-        }}
-      >
-        {/* Logo */}
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <div
-            style={{
-              width: 28,
-              height: 28,
-              backgroundColor: "#000",
-              borderRadius: 6,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <span style={{ color: "#fff", fontWeight: 700, fontSize: 11 }}>
-              IQ
-            </span>
-          </div>
-          <span style={{ fontSize: 14, fontWeight: 600 }}>ResumeIQ</span>
-        </div>
-
-        {/* Links */}
-        <div
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: "16px 32px",
-            fontSize: 14,
-            color: "#9ca3af",
-          }}
-        >
-          <a href="#features" className="hover:text-black transition-colors">
-            Features
-          </a>
-          <a
-            href="#how-it-works"
-            className="hover:text-black transition-colors"
-          >
-            How It Works
-          </a>
-          <Link href="/login" className="hover:text-black transition-colors">
-            Login
-          </Link>
-          <Link href="/signup" className="hover:text-black transition-colors">
-            Sign Up
-          </Link>
-        </div>
-
-        {/* Copyright */}
-        <p style={{ fontSize: 14, color: "#9ca3af" }}>
-          © {new Date().getFullYear()} ResumeIQ
-        </p>
-      </div>
-    </footer>
-  );
-}
-
 /* ──────────────────────────── PAGE ──────────────────────────────────────── */
 
-export default function Home() {
+export default function OverviewPage() {
   return (
     <>
       <Navbar />
-      <main>
-        <Hero />
-        <Features />
-        <HowItWorks />
-        <CTA />
-      </main>
-      <Footer />
+      <HeroOverview />
+      <WhatIsResumeIQ />
+      <UserFlow />
+      <KeyFeatures />
+      <WhyItHelps />
+      <CTA />
     </>
   );
 }
