@@ -71,21 +71,7 @@ An intelligent web application that analyzes resumes and provides actionable ins
 
 ### Database
 
-* Relational Database (MySQL / PostgreSQL)
-
-#### Schema:
-
-* **Users** (user_id, name, email, created_at)
-* **Resumes** (resume_id, user_id, file_name, resume_text, upload_date)
-* **Skills** (skill_id, skill_name, category)
-* **Jobs** (job_id, company_name, job_title, job_description, location, salary_range, posted_date, api_source)
-* **Resume_Job_Match** (match_id, resume_id, job_id, match_score, missing_skills, analysis_date)
-
-### AI / NLP
-
-* Resume parsing
-* Skill extraction
-* Text analysis for improvements
+* Relational Database (MySQL )
 
 ---
 
@@ -136,7 +122,7 @@ An intelligent web application that analyzes resumes and provides actionable ins
 1. Clone the repository
 
 ```
-git clone https://github.com/your-username/ai-resume-analyzer.git
+git clone https://github.com/anshdev44/ai-resume-analyzer.git
 ```
 
 2. Install dependencies
