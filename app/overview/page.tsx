@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 /* ──────────────────────────── Icons (inline SVG) ──────────────────────────── */
 
@@ -206,7 +207,7 @@ function Navbar() {
       style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 50 }}
       className={`transition-all duration-300 ${
         scrolled
-          ? "bg-white/80 backdrop-blur-xl border-b border-gray-200 shadow-[0_1px_3px_rgba(0,0,0,0.04)]"
+          ? "bg-white/80 dark:bg-black/80 backdrop-blur-xl border-b border-gray-200 dark:border-gray-800 shadow-[0_1px_3px_rgba(0,0,0,0.04)]"
           : "bg-transparent"
       }`}
     >
@@ -222,18 +223,17 @@ function Navbar() {
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2.5 group">
           <div
+            className="bg-black dark:bg-white group-hover:scale-105 transition-transform"
             style={{
               width: 36,
               height: 36,
-              backgroundColor: "#000",
               borderRadius: 8,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
             }}
-            className="group-hover:scale-105 transition-transform"
           >
-            <span style={{ color: "#fff", fontWeight: 700, fontSize: 14 }}>
+            <span className="text-white dark:text-black" style={{ fontWeight: 700, fontSize: 14 }}>
               IQ
             </span>
           </div>
@@ -274,6 +274,7 @@ function Navbar() {
 
         {session ? (
           <div className="flex items-center gap-4">
+            <ThemeToggle />
             <span className="text-sm font-medium">
               {session.user?.name ?? "User"}
             </span>
@@ -294,6 +295,7 @@ function Navbar() {
           </div>
         ) : (
           <div className="hidden md:flex items-center gap-4">
+            <ThemeToggle />
             <Link
               href="/login"
               style={{
@@ -310,15 +312,13 @@ function Navbar() {
 
             <Link
               href="/signup"
+              className="bg-black dark:bg-white text-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200 transition-all hover:shadow-lg"
               style={{
                 fontSize: 14,
                 fontWeight: 500,
                 padding: "10px 28px",
                 borderRadius: 9999,
-                backgroundColor: "#000",
-                color: "#fff",
               }}
-              className="hover:bg-gray-800 transition-all hover:shadow-lg"
             >
               Sign up
             </Link>
@@ -326,24 +326,27 @@ function Navbar() {
         )}
 
         {/* Mobile hamburger */}
-        <button
-          className="md:hidden hover:bg-gray-100 transition-colors"
-          style={{ padding: 8, borderRadius: 8 }}
-          onClick={() => setMobileOpen(!mobileOpen)}
-          aria-label="Toggle menu"
-        >
-          {mobileOpen ? (
-            <CloseIcon className="w-6 h-6" />
-          ) : (
-            <MenuIcon className="w-6 h-6" />
-          )}
-        </button>
+        <div className="md:hidden flex items-center gap-2">
+          <ThemeToggle />
+          <button
+            className="hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+            style={{ padding: 8, borderRadius: 8 }}
+            onClick={() => setMobileOpen(!mobileOpen)}
+            aria-label="Toggle menu"
+          >
+            {mobileOpen ? (
+              <CloseIcon className="w-6 h-6" />
+            ) : (
+              <MenuIcon className="w-6 h-6" />
+            )}
+          </button>
+        </div>
       </div>
 
       {/* Mobile menu */}
       {mobileOpen && (
         <div
-          className="md:hidden bg-white border-b border-gray-200 animate-fade-in"
+          className="md:hidden bg-white dark:bg-black border-b border-gray-200 dark:border-gray-800 animate-fade-in"
           style={{ padding: "0 24px 24px" }}
         >
           <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
@@ -411,16 +414,14 @@ function Navbar() {
             </Link>
             <Link
               href="/signup"
+              className="bg-black dark:bg-white text-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200 transition-all"
               style={{
                 textAlign: "center",
                 fontSize: 14,
                 fontWeight: 500,
                 padding: "12px 24px",
                 borderRadius: 9999,
-                backgroundColor: "#000",
-                color: "#fff",
               }}
-              className="hover:bg-gray-800 transition-all"
             >
               Sign up
             </Link>
@@ -508,7 +509,7 @@ function HeroOverview() {
 
 function WhatIsResumeIQ() {
   return (
-    <section id="what-is" style={{ padding: "96px 0", backgroundColor: "#fafafa" }}>
+    <section id="what-is" className="bg-gray-50/60 dark:bg-gray-900/40" style={{ padding: "96px 0" }}>
       <div style={containerNarrowStyle}>
         <div style={{ textAlign: "center", marginBottom: 80 }}>
           <p
@@ -543,11 +544,10 @@ function WhatIsResumeIQ() {
         >
           {/* Core Description */}
           <div
+            className="bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800 border"
             style={{
               padding: 32,
               borderRadius: 16,
-              border: "1px solid #e5e7eb",
-              backgroundColor: "#fff",
             }}
           >
             <h3 style={{ fontSize: 20, fontWeight: 600, marginBottom: 16 }}>Your Resume, Elevated</h3>
@@ -556,15 +556,15 @@ function WhatIsResumeIQ() {
             </p>
             <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
               <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
-                <span style={{ color: "#000", fontWeight: 700 }}>✓</span>
+                <span className="text-black dark:text-white" style={{ fontWeight: 700 }}>✓</span>
                 <span style={{ color: "#6b7280" }}>AI-powered analysis using Google Gemini</span>
               </div>
               <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
-                <span style={{ color: "#000", fontWeight: 700 }}>✓</span>
+                <span className="text-black dark:text-white" style={{ fontWeight: 700 }}>✓</span>
                 <span style={{ color: "#6b7280" }}>Extracts skills, experience, education, and certifications</span>
               </div>
               <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
-                <span style={{ color: "#000", fontWeight: 700 }}>✓</span>
+                <span className="text-black dark:text-white" style={{ fontWeight: 700 }}>✓</span>
                 <span style={{ color: "#6b7280" }}>Matches you with job roles and opportunities</span>
               </div>
             </div>
@@ -660,11 +660,10 @@ function UserFlow() {
           {flowSteps.map((step, idx) => (
             <div key={step.title} style={{ textAlign: "center" }}>
               <div
+                className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700"
                 style={{
                   width: 64,
                   height: 64,
-                  backgroundColor: "#f9fafb",
-                  border: "1px solid #e5e7eb",
                   borderRadius: 12,
                   display: "flex",
                   alignItems: "center",
@@ -737,7 +736,7 @@ function KeyFeatures() {
   ];
 
   return (
-    <section style={{ padding: "96px 0", backgroundColor: "#fafafa" }}>
+    <section className="bg-gray-50/60 dark:bg-gray-900/40" style={{ padding: "96px 0" }}>
       <div style={containerStyle}>
         <div style={{ textAlign: "center", marginBottom: 80 }}>
           <p
@@ -773,22 +772,18 @@ function KeyFeatures() {
           {features.map((feature) => (
             <div
               key={feature.title}
-              className="group hover:shadow-xl hover:shadow-black/[0.03] transition-all duration-300"
+              className="group hover:shadow-xl hover:shadow-black/[0.03] transition-all duration-300 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800"
               style={{
                 padding: 32,
                 borderRadius: 16,
-                border: "1px solid #e5e7eb",
-                backgroundColor: "#fff",
               }}
             >
               <div
-                className="group-hover:bg-black group-hover:text-white transition-all duration-300"
+                className="group-hover:bg-black group-hover:text-white transition-all duration-300 bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700"
                 style={{
                   width: 56,
                   height: 56,
                   borderRadius: 12,
-                  backgroundColor: "#f9fafb",
-                  border: "1px solid #f3f4f6",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -857,7 +852,7 @@ function WhyItHelps() {
           className="grid-cols-1 md:grid-cols-2"
         >
           <div>
-            <h3 style={{ fontSize: 20, fontWeight: 600, marginBottom: 16, color: "#000" }}>
+            <h3 className="text-black dark:text-white" style={{ fontSize: 20, fontWeight: 600, marginBottom: 16 }}>
               For Job Seekers
             </h3>
             <ul style={{ fontSize: 15, color: "#6b7280", lineHeight: 1.8 }}>
@@ -870,7 +865,7 @@ function WhyItHelps() {
           </div>
 
           <div>
-            <h3 style={{ fontSize: 20, fontWeight: 600, marginBottom: 16, color: "#000" }}>
+            <h3 className="text-black dark:text-white" style={{ fontSize: 20, fontWeight: 600, marginBottom: 16 }}>
               The ResumeIQ Advantage
             </h3>
             <ul style={{ fontSize: 15, color: "#6b7280", lineHeight: 1.8 }}>
@@ -894,9 +889,9 @@ function CTA() {
     <section style={{ padding: "96px 0", backgroundColor: "#fafafa" }}>
       <div style={{ ...containerNarrowStyle, maxWidth: 896 }}>
         <div
+          className="bg-black dark:bg-gray-900"
           style={{
             position: "relative",
-            backgroundColor: "#000",
             borderRadius: 24,
             padding: "80px 40px",
             textAlign: "center",
@@ -904,11 +899,11 @@ function CTA() {
           }}
         >
           <h2
+            className="text-white dark:text-black"
             style={{
               position: "relative",
               fontSize: "clamp(32px, 5vw, 48px)",
               fontWeight: 700,
-              color: "#fff",
               letterSpacing: "-0.02em",
               marginBottom: 24,
             }}
@@ -938,15 +933,13 @@ function CTA() {
               alignItems: "center",
               justifyContent: "center",
               gap: 10,
-              backgroundColor: "#fff",
-              color: "#000",
               padding: "16px 40px",
               borderRadius: 9999,
               fontSize: 16,
               fontWeight: 600,
               textDecoration: "none",
             }}
-            className="hover:shadow-lg hover:scale-105 transition-all group"
+            className="hover:shadow-lg hover:scale-105 transition-all group bg-white dark:bg-white/10 text-black dark:text-white border dark:border-white/20"
           >
             Get Started
             <ArrowRightIcon className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -961,7 +954,7 @@ function CTA() {
 
 export default function OverviewPage() {
   return (
-    <>
+    <div className="bg-gradient-to-br from-slate-100 via-slate-50 to-white dark:from-slate-950 dark:via-black dark:to-slate-900 min-h-screen animate-fade-in">
       <Navbar />
       <HeroOverview />
       <WhatIsResumeIQ />
@@ -969,6 +962,6 @@ export default function OverviewPage() {
       <KeyFeatures />
       <WhyItHelps />
       <CTA />
-    </>
+    </div>
   );
 }

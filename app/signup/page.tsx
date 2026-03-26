@@ -2,6 +2,7 @@
 
 import { signIn } from "next-auth/react";
 import Link from "next/link";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 function GoogleIcon({ className = "w-5 h-5" }: { className?: string }) {
     return (
@@ -36,7 +37,8 @@ function GitHubIcon({ className = "w-5 h-5" }: { className?: string }) {
 
 export default function SignupPage() {
     return (
-        <div className="min-h-screen flex items-center justify-center px-6">
+        <div className="min-h-screen flex items-center justify-center px-6 bg-gradient-to-br from-stone-100 via-stone-50 to-white dark:from-stone-950 dark:via-black dark:to-stone-900 animate-fade-in">
+            <div className="absolute top-4 right-4"><ThemeToggle /></div>
             {/* Subtle grid background */}
             <div
                 className="fixed inset-0 opacity-[0.02] pointer-events-none"

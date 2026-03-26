@@ -2,6 +2,7 @@
 
 import { useSession, signIn, signOut } from "next-auth/react";
 import Link from "next/link";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 function GoogleIcon({ className = "w-5 h-5" }: { className?: string }) {
   const { data: session } = useSession();
@@ -37,12 +38,13 @@ function GitHubIcon({ className = "w-5 h-5" }: { className?: string }) {
 
 export default function LoginPage() {
   return (
-    <div className="min-h-screen flex items-center justify-center px-6">
+    <div className="min-h-screen flex items-center justify-center px-6 bg-gradient-to-br from-stone-100 via-stone-50 to-white dark:from-zinc-950 dark:via-zinc-900 dark:to-zinc-950 animate-fade-in transition-colors duration-500">
+      <div className="absolute top-4 right-4"><ThemeToggle /></div>
       {/* Subtle grid background */}
       <div
-        className="fixed inset-0 opacity-[0.02] pointer-events-none"
+        className="fixed inset-0 opacity-[0.02] dark:opacity-[0.04] pointer-events-none transition-opacity duration-500"
         style={{
-          backgroundImage: `linear-gradient(#000 1px, transparent 1px), linear-gradient(90deg, #000 1px, transparent 1px)`,
+          backgroundImage: `linear-gradient(var(--color-foreground) 1px, transparent 1px), linear-gradient(90deg, var(--color-foreground) 1px, transparent 1px)`,
           backgroundSize: "60px 60px",
         }}
       />
@@ -53,60 +55,62 @@ export default function LoginPage() {
           href="/"
           className="flex items-center gap-2.5 justify-center mb-12 group"
         >
-          <div className="w-10 h-10 bg-black rounded-lg flex items-center justify-center group-hover:scale-105 transition-transform">
-            <span className="text-white font-bold text-base">IQ</span>
+          <div className="w-10 h-10 bg-black dark:bg-white rounded-lg flex items-center justify-center group-hover:scale-105 transition-transform shadow-lg dark:shadow-white/10">
+            <span className="text-white dark:text-black font-bold text-base">IQ</span>
           </div>
-          <span className="font-semibold text-2xl tracking-tight">
+          <span className="font-semibold text-2xl tracking-tight text-black dark:text-white">
             ResumeIQ
           </span>
         </Link>
 
-        <h1 className="text-3xl font-bold text-center tracking-tight">
-          Welcome back
-        </h1>
-        <p className="text-base text-gray-400 text-center mt-3 mb-10">
-          Log in to your account to continue
-        </p>
+        <div className="bg-white/40 dark:bg-zinc-900/40 backdrop-blur-xl border border-gray-200 dark:border-white/10 rounded-2xl p-8 shadow-2xl dark:shadow-black/50 transition-colors duration-500">
+          <h1 className="text-3xl font-bold text-center tracking-tight text-black dark:text-white">
+            Welcome back
+          </h1>
+          <p className="text-base text-gray-400 dark:text-zinc-400 text-center mt-3 mb-10">
+            Log in to your account to continue
+          </p>
 
-        <div className="space-y-4">
-          {/* Google */}
-          <button
-             onClick={() => {
-                signIn("google");
+          <div className="space-y-4">
+            {/* Google */}
+            <button
+               onClick={() => {
+                  signIn("google");
+                }}
+              className="w-full flex items-center justify-center gap-3 px-6 py-4 rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-zinc-800/50 text-black dark:text-white text-base font-medium hover:bg-gray-50 dark:hover:bg-zinc-800 hover:border-gray-300 dark:hover:border-white/20 shadow-xs hover:shadow-md transition-all cursor-pointer"
+            >
+              <GoogleIcon className="w-5 h-5" />
+              Continue with Google
+            </button>
+
+            {/* GitHub */}
+            <button
+              onClick={() => {
+                signIn("github");
               }}
-            className="w-full flex items-center justify-center gap-3 px-6 py-4 rounded-xl border border-gray-200 bg-white text-base font-medium hover:bg-gray-50 hover:border-gray-300 hover:shadow-md transition-all cursor-pointer"
-          >
-            <GoogleIcon className="w-5 h-5" />
-            Continue with Google
-          </button>
+              className="w-full flex items-center justify-center gap-3 px-6 py-4 rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-zinc-800/50 text-black dark:text-white text-base font-medium hover:bg-gray-50 dark:hover:bg-zinc-800 hover:border-gray-300 dark:hover:border-white/20 shadow-xs hover:shadow-md transition-all cursor-pointer"
+            >
+              <GitHubIcon className="w-5 h-5" />
+              Continue with GitHub
+            </button>
+          </div>
 
-          {/* GitHub */}
-          <button
-            onClick={() => {
-              signIn("github");
-            }}
-            className="w-full flex items-center justify-center gap-3 px-6 py-4 rounded-xl border border-gray-200 bg-white text-base font-medium hover:bg-gray-50 hover:border-gray-300 hover:shadow-md transition-all cursor-pointer"
-          >
-            <GitHubIcon className="w-5 h-5" />
-            Continue with GitHub
-          </button>
+          <div className="flex items-center gap-4 my-8">
+            <div className="flex-1 h-px bg-gray-200 dark:bg-zinc-800" />
+            <span className="text-sm text-gray-400 dark:text-zinc-500">or</span>
+            <div className="flex-1 h-px bg-gray-200 dark:bg-zinc-800" />
+          </div>
+
+          <p className="text-center text-sm text-gray-400 dark:text-zinc-400">
+            Don&apos;t have an account?{" "}
+            <Link
+              href="/signup"
+              className="text-black dark:text-white font-medium hover:underline transition-colors"
+            >
+              Sign up
+            </Link>
+          </p>
         </div>
-
-        <div className="flex items-center gap-4 my-8">
-          <div className="flex-1 h-px bg-gray-200" />
-          <span className="text-sm text-gray-400">or</span>
-          <div className="flex-1 h-px bg-gray-200" />
-        </div>
-
-        <p className="text-center text-sm text-gray-400">
-          Don&apos;t have an account?{" "}
-          <Link
-            href="/signup"
-            className="text-black font-medium hover:underline"
-          >
-            Sign up
-          </Link>
-        </p>
       </div>
     </div>
   );

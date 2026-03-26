@@ -17,43 +17,39 @@ const ChartBarLabel = ({ role }: Props) => {
   const chartConfig = {
     value: {
       label: "Score",
-      color: "#333333",
+      color: "#6366f1",
     },
   } satisfies ChartConfig;
 
-  const chartData = role.map((item) => ({
+  const chartData = role?.map((item) => ({
     name: item.role,
     value: item.score,
-  }));
+  })) || [];
 
   return (
-    <div className="w-full max-w-xl rounded-md bg-background p-4">
-      <ChartContainer config={chartConfig}>
+    <div className="w-full flex flex-col justify-center bg-transparent px-2">
+      <ChartContainer config={chartConfig} className="w-full h-[220px]">
         <BarChart accessibilityLayer data={chartData} margin={{ top: 20 }}>
-          <CartesianGrid vertical={false} />
-
+          <CartesianGrid vertical={false} strokeDasharray="3 3" strokeOpacity={0.2} />
           <XAxis
             axisLine={false}
             dataKey="name"
-            tickFormatter={(value) => String(value).slice(0, 3)}
+            tickFormatter={(value) => String(value).length > 8 ? String(value).slice(0, 8) + "..." : String(value)}
             tickLine={false}
             tickMargin={10}
+            fontSize={11}
           />
-
           <ChartTooltip
             content={<ChartTooltipContent nameKey="name" />}
             cursor={false}
           />
-
-          <Bar dataKey="value" fill="#333333" radius={8}>
+          <Bar dataKey="value" fill="#6366f1" radius={[4, 4, 0, 0]}>
             <LabelList
-              className="fill-foreground"
-              fontSize={12}
-              offset={12}
+              className="fill-black dark:fill-white"
+              fontSize={11}
+              offset={8}
               position="top"
-              formatter={(value: number, entry: any) =>
-                entry?.name ? `${entry.name}: ${value}` : value
-              }
+              formatter={(value: number) => value}
             />
           </Bar>
         </BarChart>

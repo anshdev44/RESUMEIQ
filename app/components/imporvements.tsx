@@ -19,62 +19,64 @@ type Props = {
   data: ImprovementsData;
 };
 const Imporvements = ({ data }: Props) => {
-  console.log("ye hai asli",data);
+  if (!data?.improvements?.length) return null;
 
-  // if (!data || !data.improvements) {
-  //   return <div>Loading improvements...</div>;
-  // }
   return (
-    <div className="min-h-screen bg-white text-black px-6 md:px-20 py-12">
-      <h1 className="text-4xl font-semibold mb-12 border-b pb-4">
-        Resume Improvements
-      </h1>
+    <div className="w-full bg-transparent text-gray-900 dark:text-zinc-100 py-4">
+      <h2 className="text-2xl font-bold mb-8 border-b border-gray-200 dark:border-zinc-800 pb-4">
+        Actionable Improvements
+      </h2>
 
-      <div className="space-y-12">
+      <div className="space-y-8">
         {data.improvements.map((item: Improvement, index: number) => (
-          <div key={index} className="border-b pb-10 last:border-none">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-semibold">{item.heading}</h2>
-
+          <div key={index} className="border-b border-gray-200 dark:border-zinc-800 pb-8 last:border-none">
+            <div className="flex justify-between items-start md:items-center mb-6 flex-col md:flex-row gap-4">
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white">{item.heading}</h3>
               <span
-                className={`text-sm px-3 py-1 rounded-full border ${
+                className={`text-xs px-3 py-1 rounded-full border shadow-sm font-semibold ${
                   item.priority === "High"
-                    ? "bg-red-700 text-white font-bold"
+                    ? "bg-red-50 dark:bg-red-500/10 text-red-700 dark:text-red-400 border-red-200 dark:border-red-500/20"
                     : item.priority === "Medium"
-                      ? "bg-orange-400 text-white font-bold"
-                      : "bg-green-500 text-white font-bold"
+                      ? "bg-orange-50 dark:bg-orange-500/10 text-orange-700 dark:text-orange-400 border-orange-200 dark:border-orange-500/20"
+                      : "bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-500/20"
                 }`}
               >
-                {item.priority}
+                {item.priority} Priority
               </span>
             </div>
 
-            <div className="mb-6">
-              <h3 className="text-lg font-medium mb-2">Issues</h3>
-              <ul className="list-disc list-inside text-base space-y-1">
-                {item.issues.map((issue: string, i: number) => (
-                  <li key={i}>{issue}</li>
-                ))}
-              </ul>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+              <div className="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-xl p-5 shadow-sm">
+                <h4 className="text-sm font-semibold text-gray-500 dark:text-zinc-400 mb-3 uppercase tracking-wider">Identified Issues</h4>
+                <ul className="list-disc list-inside text-sm space-y-2 text-gray-700 dark:text-zinc-300">
+                  {item.issues.map((issue: string, i: number) => (
+                    <li key={i} className="leading-relaxed">{issue}</li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-xl p-5 shadow-sm">
+                <h4 className="text-sm font-semibold text-gray-500 dark:text-zinc-400 mb-3 uppercase tracking-wider">Targeted Fixes</h4>
+                <ul className="list-disc list-inside text-sm space-y-2 text-gray-700 dark:text-zinc-300">
+                  {item.suggestions.map((sug: string, i: number) => (
+                    <li key={i} className="leading-relaxed">{sug}</li>
+                  ))}
+                </ul>
+              </div>
             </div>
 
-            <div className="mb-6">
-              <h3 className="text-lg font-medium mb-2">Suggestions</h3>
-              <ul className="list-disc list-inside text-base space-y-1">
-                {item.suggestions.map((sug: string, i: number) => (
-                  <li key={i}>{sug}</li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="bg-gray-50 border p-4 rounded-lg">
-              <h3 className="text-lg font-medium mb-2">Example Improvement</h3>
-              <p className="text-sm line-through opacity-60">
-                {item.example.original}
-              </p>
-              <p className="text-base mt-2 font-medium">
-                {item.example.improved}
-              </p>
+            <div className="bg-gray-50 dark:bg-[#111111] border border-gray-200 dark:border-zinc-800 p-5 rounded-xl shadow-inner">
+              <h4 className="text-sm font-semibold text-gray-500 dark:text-zinc-400 mb-3 uppercase tracking-wider">Example Transformation</h4>
+              <div className="space-y-3 font-mono text-sm mt-4">
+                <div className="flex gap-3 items-start">
+                  <span className="text-red-500 shrink-0 select-none">[-]</span>
+                  <span className="line-through text-gray-500 dark:text-zinc-500 bg-red-50 dark:bg-red-500/10 px-1 rounded break-words w-full">{item.example.original}</span>
+                </div>
+                <div className="flex gap-3 items-start">
+                  <span className="text-emerald-500 shrink-0 select-none">[+]</span>
+                  <span className="text-gray-900 dark:text-emerald-50 bg-emerald-50 dark:bg-emerald-500/10 px-1 rounded break-words w-full">{item.example.improved}</span>
+                </div>
+              </div>
             </div>
           </div>
         ))}

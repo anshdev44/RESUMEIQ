@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useState, useCallback, useRef } from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { NextResponse } from "next/server";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 interface UploadResult {
   success: boolean;
@@ -336,27 +337,20 @@ export default function UploadPage() {
   };
 
   return (
-    <div style={{ minHeight: "100vh", backgroundColor: "#fff" }}>
+    <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-indigo-50 to-white dark:from-zinc-950 dark:via-zinc-900 dark:to-zinc-950 animate-fade-in transition-colors duration-500">
       <div
+        className="opacity-5 dark:opacity-[0.03] transition-opacity duration-500"
         style={{
           position: "fixed",
           inset: 0,
-          opacity: 0.02,
           pointerEvents: "none",
-          backgroundImage: `linear-gradient(#000 1px, transparent 1px), linear-gradient(90deg, #000 1px, transparent 1px)`,
+          backgroundImage: `linear-gradient(var(--color-foreground) 1px, transparent 1px), linear-gradient(90deg, var(--color-foreground) 1px, transparent 1px)`,
           backgroundSize: "60px 60px",
         }}
       />
 
       <header
-        style={{
-          position: "sticky",
-          top: 0,
-          zIndex: 40,
-          borderBottom: "1px solid #f3f4f6",
-          backgroundColor: "rgba(255,255,255,0.8)",
-          backdropFilter: "blur(12px)",
-        }}
+        className="sticky top-0 z-40 border-b border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-black/80 backdrop-blur-xl"
       >
         <div
           style={{
@@ -383,21 +377,22 @@ export default function UploadPage() {
             }}
           >
             <div
+              className="bg-black dark:bg-white shadow-md dark:shadow-white/10"
               style={{
                 width: 32,
                 height: 32,
-                backgroundColor: "#000",
                 borderRadius: 8,
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
               }}
             >
-              <span style={{ color: "#fff", fontWeight: 700, fontSize: 12 }}>
+              <span className="text-white dark:text-black" style={{ fontWeight: 700, fontSize: 12 }}>
                 IQ
               </span>
             </div>
             <span
+              className="text-black dark:text-white"
               style={{
                 fontWeight: 600,
                 fontSize: 18,
@@ -407,13 +402,16 @@ export default function UploadPage() {
               ResumeIQ
             </span>
           </Link>
-          <Link
-            href="/"
-            style={{ fontSize: 14, color: "#6b7280", textDecoration: "none" }}
-            className="hover:text-black transition-colors"
-          >
-            ← Back to home
-          </Link>
+          <div className="flex items-center gap-4">
+            <ThemeToggle />
+            <Link
+              href="/"
+              style={{ fontSize: 14, color: "#6b7280", textDecoration: "none" }}
+              className="hover:text-black dark:hover:text-white transition-colors"
+            >
+              ← Back to home
+            </Link>
+          </div>
         </div>
       </header>
 
@@ -424,6 +422,7 @@ export default function UploadPage() {
             className="animate-fade-up"
           >
             <h1
+              className="text-black dark:text-white"
               style={{
                 fontSize: 32,
                 fontWeight: 700,
@@ -433,8 +432,8 @@ export default function UploadPage() {
               Upload your resume
             </h1>
             <p
+              className="text-gray-500 dark:text-zinc-400"
               style={{
-                color: "#6b7280",
                 marginTop: 12,
                 fontSize: 16,
                 maxWidth: 420,
@@ -453,15 +452,18 @@ export default function UploadPage() {
                 onDragLeave={handleDragLeave}
                 onDrop={handleDrop}
                 onClick={() => !file && fileInputRef.current?.click()}
+                className={isDragging 
+                  ? "border-black dark:border-white bg-gray-50 dark:bg-zinc-800/80 backdrop-blur-md" 
+                  : "border-gray-300 dark:border-white/20 bg-white/60 dark:bg-zinc-900/40 backdrop-blur-xl shadow-xl dark:shadow-black/50"}
                 style={{
                   position: "relative",
-                  border: `2px dashed ${isDragging ? "#000" : "#d1d5db"}`,
+                  borderWidth: 2,
+                  borderStyle: "dashed",
                   borderRadius: 20,
                   padding: file ? "32px" : "64px 32px",
                   textAlign: "center",
                   cursor: file ? "default" : "pointer",
                   transition: "all 0.2s ease",
-                  backgroundColor: isDragging ? "#fafafa" : "#fff",
                 }}
               >
                 <input
@@ -475,23 +477,23 @@ export default function UploadPage() {
                 {!file ? (
                   <>
                     <div
+                      className={`transition-all duration-200 bg-gray-50 dark:bg-zinc-800/60 border-gray-100 dark:border-white/10 border ${
+                        isDragging ? "text-black dark:text-white" : "text-gray-400 dark:text-zinc-500"
+                      }`}
                       style={{
                         width: 72,
                         height: 72,
                         borderRadius: "50%",
-                        backgroundColor: "#f9fafb",
-                        border: "1px solid #f3f4f6",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
                         margin: "0 auto 24px",
-                        color: isDragging ? "#000" : "#9ca3af",
-                        transition: "all 0.2s ease",
                       }}
                     >
                       <UploadCloudIcon className="w-8 h-8" />
                     </div>
                     <p
+                      className="text-black dark:text-white"
                       style={{ fontSize: 16, fontWeight: 500, marginBottom: 8 }}
                     >
                       {isDragging
@@ -499,9 +501,9 @@ export default function UploadPage() {
                         : "Drag & drop your resume"}
                     </p>
                     <p
+                      className="text-gray-400 dark:text-zinc-400"
                       style={{
                         fontSize: 14,
-                        color: "#9ca3af",
                         marginBottom: 20,
                       }}
                     >
@@ -518,13 +520,12 @@ export default function UploadPage() {
                       {["PDF", "DOCX", "DOC", "TXT"].map((ext) => (
                         <span
                           key={ext}
+                          className="bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400"
                           style={{
                             fontSize: 11,
                             fontWeight: 500,
                             padding: "4px 12px",
                             borderRadius: 6,
-                            backgroundColor: "#f3f4f6",
-                            color: "#6b7280",
                           }}
                         >
                           .{ext.toLowerCase()}
@@ -542,19 +543,18 @@ export default function UploadPage() {
                     style={{ display: "flex", alignItems: "center", gap: 16 }}
                   >
                     <div
+                      className="bg-gray-50 dark:bg-gray-800 border-gray-100 dark:border-gray-700 border"
                       style={{
                         width: 56,
                         height: 56,
                         borderRadius: 12,
-                        backgroundColor: "#f9fafb",
-                        border: "1px solid #f3f4f6",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
                         flexShrink: 0,
                       }}
                     >
-                      <span style={{ color: "#6b7280" }}>
+                      <span className="text-gray-500 dark:text-gray-400">
                         <FileIcon className="w-6 h-6" />
                       </span>
                     </div>
@@ -588,16 +588,13 @@ export default function UploadPage() {
                         width: 36,
                         height: 36,
                         borderRadius: 8,
-                        border: "1px solid #e5e7eb",
-                        backgroundColor: "#fff",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
                         cursor: "pointer",
                         flexShrink: 0,
-                        color: "#9ca3af",
                       }}
-                      className="hover:text-red-500 hover:border-red-200 transition-colors"
+                      className="hover:text-red-500 hover:border-red-200 transition-colors bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500"
                     >
                       <TrashIcon />
                     </button>
@@ -607,6 +604,7 @@ export default function UploadPage() {
 
               {error && (
                 <div
+                  className="bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400"
                   style={{
                     display: "flex",
                     alignItems: "center",
@@ -614,8 +612,6 @@ export default function UploadPage() {
                     marginTop: 16,
                     padding: "12px 16px",
                     borderRadius: 12,
-                    backgroundColor: "#fef2f2",
-                    color: "#dc2626",
                     fontSize: 14,
                   }}
                 >
@@ -636,8 +632,6 @@ export default function UploadPage() {
                     gap: 8,
                     width: "100%",
                     marginTop: 20,
-                    backgroundColor: "#000",
-                    color: "#fff",
                     padding: "16px 32px",
                     borderRadius: 9999,
                     fontSize: 16,
@@ -645,7 +639,7 @@ export default function UploadPage() {
                     border: "none",
                     cursor: "pointer",
                   }}
-                  className="hover:bg-gray-800 transition-all hover:shadow-lg"
+                  className="bg-black dark:bg-white text-white dark:text-black hover:bg-zinc-800 dark:hover:bg-zinc-200 transition-all hover:scale-105 hover:shadow-xl dark:hover:shadow-[0_0_30px_rgba(255,255,255,0.4)] ring-1 ring-black/5 dark:ring-white/20"
                 >
                   Analyze my resume
                 </button>
@@ -653,6 +647,7 @@ export default function UploadPage() {
 
               {uploading && (
                 <div
+                  className="bg-black dark:bg-white text-white dark:text-black"
                   style={{
                     display: "flex",
                     alignItems: "center",
@@ -660,8 +655,6 @@ export default function UploadPage() {
                     gap: 12,
                     width: "100%",
                     marginTop: 20,
-                    backgroundColor: "#000",
-                    color: "#fff",
                     padding: "16px 32px",
                     borderRadius: 9999,
                     fontSize: 16,
@@ -695,44 +688,43 @@ export default function UploadPage() {
           ) : (
             <div className="animate-fade-up" style={{ textAlign: "center" }}>
               <div
+                className="bg-green-50 dark:bg-green-900/20 text-green-500 dark:text-green-400"
                 style={{
                   width: 80,
                   height: 80,
                   borderRadius: "50%",
-                  backgroundColor: "#f0fdf4",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
                   margin: "0 auto 24px",
-                  color: "#22c55e",
                 }}
               >
                 <CheckCircleIcon className="w-10 h-10" />
               </div>
-              <h2 style={{ fontSize: 24, fontWeight: 600, marginBottom: 8 }}>
+              <h2 className="text-black dark:text-white" style={{ fontSize: 24, fontWeight: 600, marginBottom: 8 }}>
                 Resume uploaded successfully!
               </h2>
-              <p style={{ color: "#6b7280", fontSize: 15, marginBottom: 8 }}>
-                <span style={{ fontWeight: 500, color: "#111" }}>
+              <p className="text-gray-500 dark:text-zinc-400" style={{ fontSize: 15, marginBottom: 8 }}>
+                <span className="text-black dark:text-white" style={{ fontWeight: 500 }}>
                   {uploadResult.originalName}
                 </span>{" "}
                 ({formatFileSize(uploadResult.size)})
               </p>
-              <p style={{ color: "#9ca3af", fontSize: 14, marginBottom: 32 }}>
+              <p className="text-gray-400 dark:text-zinc-500" style={{ fontSize: 14, marginBottom: 32 }}>
                 Your resume is being analyzed. Results will appear shortly.
               </p>
               <div>
                 <button
                   onClick={handleredirect}
                   className="group relative mx-auto flex items-center justify-center px-8 py-4 
-  border-2 border-black text-black font-semibold tracking-wide 
-  hover:bg-black hover:text-white transition-all duration-300 
-  rounded-xl shadow-sm hover:shadow-lg cursor-pointer"
+  border-2 border-black dark:border-white text-black dark:text-white font-semibold tracking-wide 
+  hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black transition-all duration-300 
+  rounded-xl shadow-sm hover:shadow-xl dark:hover:shadow-[0_0_30px_rgba(255,255,255,0.3)] cursor-pointer"
                 >
-                  <span className="relative z-10">View Results</span>
+                  <span className="relative z-10 transition-colors duration-300">View Results</span>
 
                   <span
-                    className="absolute inset-0 scale-0 bg-black rounded-xl 
+                    className="absolute inset-0 scale-0 bg-black dark:bg-white rounded-[10px] 
   transition-transform duration-300 group-hover:scale-100"
                   ></span>
                 </button>

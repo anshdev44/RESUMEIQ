@@ -28,40 +28,34 @@ const chartConfig = {
 
 export default function Component(props: { score: number }) {
   const chartData = [
-    { browser: "score", visitors: props.score, fill: "#000000" },
+    { browser: "score", visitors: props.score ?? 0, fill: "#10b981" },
   ]
   const value = chartData[0].visitors
 
-
   return (
-    <Card className="flex flex-col  border-0 bg-white text-black shadow-none">
-      <CardHeader className="items-center pb-0" />
-
-      <CardContent className="flex-1 pb-0">
+    <div className="w-full flex items-center justify-center bg-transparent">
         <ChartContainer
           config={chartConfig}
-          className="mx-auto aspect-square w-[300px] h-[300px]"
+          className="mx-auto w-[220px] h-[220px]"
         >
           <RadialBarChart
             data={chartData}
-            startAngle={0}
-            endAngle={(value / 100) * 360}
-            innerRadius={80}
-            outerRadius={110}
+            startAngle={90}
+            endAngle={90 - (value / 100) * 360}
+            innerRadius={60}
+            outerRadius={80}
           >
             <PolarGrid
               gridType="circle"
               radialLines={false}
               stroke="none"
-              className="first: last:"
-              polarRadius={[86, 74]}
+              className="first:fill-gray-100 dark:first:fill-zinc-800 last:fill-transparent"
+              polarRadius={[65, 50]}
             />
-
             <RadialBar
               dataKey="visitors"
               cornerRadius={10}
             />
-
             <PolarRadiusAxis tick={false} tickLine={false} axisLine={false}>
               <Label
                 content={({ viewBox }) => {
@@ -76,16 +70,9 @@ export default function Component(props: { score: number }) {
                         <tspan
                           x={viewBox.cx}
                           y={viewBox.cy}
-                          className="fill-black text-4xl font-bold"
+                          className="fill-black dark:fill-white text-3xl font-bold"
                         >
                           {value}%
-                        </tspan>
-                        <tspan
-                          x={viewBox.cx}
-                          y={(viewBox.cy || 0) + 24}
-                          className="fill-gray-500"
-                        >
-                          Resume Score
                         </tspan>
                       </text>
                     )
@@ -95,18 +82,7 @@ export default function Component(props: { score: number }) {
             </PolarRadiusAxis>
           </RadialBarChart>
         </ChartContainer>
-      </CardContent>
-
-      <CardFooter className="flex-col gap-2 text-sm">
-        <div className="flex items-center gap-2 font-medium">
-          Trending up by 5.2% this month
-          <TrendingUp className="h-4 w-4" />
-        </div>
-        <div className="text-gray-500">
-          Based on your resume analysis
-        </div>
-      </CardFooter>
-    </Card>
+    </div>
   )
 }
 

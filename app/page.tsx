@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
-import { Session } from "inspector/promises";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 /* ──────────────────────────── ICONS (inline SVG) ──────────────────────────── */
 
@@ -225,7 +225,7 @@ function Navbar() {
       style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 50 }}
       className={`transition-all duration-300 ${
         scrolled
-          ? "bg-white/80 backdrop-blur-xl border-b border-gray-200 shadow-[0_1px_3px_rgba(0,0,0,0.04)]"
+          ? "bg-white/80 dark:bg-zinc-950/80 backdrop-blur-xl border-b border-gray-200 dark:border-white/10 shadow-[0_1px_3px_rgba(0,0,0,0.04)] dark:shadow-black/50"
           : "bg-transparent"
       }`}
     >
@@ -241,22 +241,22 @@ function Navbar() {
         {/* Logo */}
         <Link href="/overview" className="flex items-center gap-2.5 group">
           <div
+            className="bg-black dark:bg-white group-hover:scale-105 transition-transform shadow-md dark:shadow-white/10"
             style={{
               width: 36,
               height: 36,
-              backgroundColor: "#000",
               borderRadius: 8,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
             }}
-            className="group-hover:scale-105 transition-transform"
           >
-            <span style={{ color: "#fff", fontWeight: 700, fontSize: 14 }}>
+            <span className="text-white dark:text-black" style={{ fontWeight: 700, fontSize: 14 }}>
               IQ
             </span>
           </div>
           <span
+            className="text-black dark:text-white"
             style={{ fontWeight: 600, fontSize: 20, letterSpacing: "-0.02em" }}
           >
             ResumeIQ
@@ -293,6 +293,7 @@ function Navbar() {
 
         {session ? (
           <div className="flex items-center gap-4">
+            <ThemeToggle />
             <span className="text-sm font-medium">
               {session.user?.name ?? "User"}
             </span>
@@ -313,6 +314,7 @@ function Navbar() {
           </div>
         ) : (
           <div className="hidden md:flex items-center gap-4">
+            <ThemeToggle />
             <Link
               href="/login"
               style={{
@@ -329,15 +331,13 @@ function Navbar() {
 
             <Link
               href="/signup"
+              className="bg-black dark:bg-white text-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200 transition-all hover:shadow-lg"
               style={{
                 fontSize: 14,
                 fontWeight: 500,
                 padding: "10px 28px",
                 borderRadius: 9999,
-                backgroundColor: "#000",
-                color: "#fff",
               }}
-              className="hover:bg-gray-800 transition-all hover:shadow-lg"
             >
               Sign up
             </Link>
@@ -345,24 +345,27 @@ function Navbar() {
         )}
 
         {/* Mobile hamburger */}
-        <button
-          className="md:hidden hover:bg-gray-100 transition-colors"
-          style={{ padding: 8, borderRadius: 8 }}
-          onClick={() => setMobileOpen(!mobileOpen)}
-          aria-label="Toggle menu"
-        >
-          {mobileOpen ? (
-            <CloseIcon className="w-6 h-6" />
-          ) : (
-            <MenuIcon className="w-6 h-6" />
-          )}
-        </button>
+        <div className="md:hidden flex items-center gap-2">
+          <ThemeToggle />
+          <button
+            className="hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+            style={{ padding: 8, borderRadius: 8 }}
+            onClick={() => setMobileOpen(!mobileOpen)}
+            aria-label="Toggle menu"
+          >
+            {mobileOpen ? (
+              <CloseIcon className="w-6 h-6" />
+            ) : (
+              <MenuIcon className="w-6 h-6" />
+            )}
+          </button>
+        </div>
       </div>
 
       {/* Mobile menu */}
       {mobileOpen && (
         <div
-          className="md:hidden bg-white border-b border-gray-200 animate-fade-in"
+          className="md:hidden bg-white dark:bg-black border-b border-gray-200 dark:border-gray-800 animate-fade-in"
           style={{ padding: "0 24px 24px" }}
         >
           <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
@@ -430,16 +433,14 @@ function Navbar() {
             </Link>
             <Link
               href="/signup"
+              className="bg-black dark:bg-white text-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200 transition-all"
               style={{
                 textAlign: "center",
                 fontSize: 14,
                 fontWeight: 500,
                 padding: "12px 24px",
                 borderRadius: 9999,
-                backgroundColor: "#000",
-                color: "#fff",
               }}
-              className="hover:bg-gray-800 transition-all"
             >
               Sign up
             </Link>
@@ -467,30 +468,82 @@ function Hero() {
     >
       {/* Subtle grid background */}
       <div
+        className="dark:opacity-5 transition-opacity duration-500"
         style={{
           position: "absolute",
           inset: 0,
           opacity: 0.03,
-          backgroundImage: `linear-gradient(#000 1px, transparent 1px), linear-gradient(90deg, #000 1px, transparent 1px)`,
+          backgroundImage: `linear-gradient(var(--color-foreground) 1px, transparent 1px), linear-gradient(90deg, var(--color-foreground) 1px, transparent 1px)`,
           backgroundSize: "60px 60px",
         }}
       />
 
-      {/* Gradient orb */}
+      {/* Spotlight Orb */}
       <div
+        className="bg-gradient-to-br from-gray-100 to-gray-100 dark:from-white/10 dark:via-white/5 dark:to-transparent transition-colors duration-1000"
         style={{
           position: "absolute",
-          top: "25%",
+          top: "-10%",
           left: "50%",
-          transform: "translate(-50%, -50%)",
-          width: 600,
-          height: 600,
-          background: "linear-gradient(to bottom right, #f3f4f6, #e5e7eb)",
+          transform: "translateX(-50%)",
+          width: "100%",
+          maxWidth: "1200px",
+          height: "800px",
           borderRadius: "50%",
-          filter: "blur(48px)",
-          opacity: 0.6,
+          filter: "blur(120px)",
+          opacity: 0.5,
+          pointerEvents: "none",
         }}
       />
+
+      {/* Right Floating Widget - ATS Score */}
+      <div 
+        className="absolute right-[5%] xl:right-[15%] top-[25%] hidden lg:flex flex-col gap-4 p-5 rounded-2xl bg-white/40 dark:bg-zinc-900/40 backdrop-blur-xl border border-gray-200 dark:border-white/10 shadow-2xl dark:shadow-[0_0_40px_rgba(16,185,129,0.05)] animate-float hover:scale-105 transition-transform duration-500"
+        style={{ width: 280, animationDelay: "1s" }}
+      >
+        <div className="flex items-center gap-4">
+          <div className="w-14 h-14 rounded-full border-[3px] border-emerald-500 flex items-center justify-center shrink-0">
+            <span className="text-xl font-bold text-emerald-600 dark:text-emerald-400">94</span>
+          </div>
+          <div>
+            <p className="font-semibold text-sm text-black dark:text-white">ATS Score</p>
+            <p className="text-xs text-gray-500 dark:text-zinc-400">Excellent Match</p>
+          </div>
+        </div>
+        <div className="space-y-3 mt-1">
+          <div className="h-2 w-full bg-gray-200/50 dark:bg-zinc-800 rounded-full overflow-hidden">
+             <div className="h-full bg-gradient-to-r from-emerald-400 to-emerald-500 w-[94%]" />
+          </div>
+          <div className="flex items-center gap-2 text-xs text-black dark:text-zinc-300">
+            <svg className="w-4 h-4 text-emerald-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+            <span>Keywords perfectly optimized</span>
+          </div>
+          <div className="flex items-center gap-2 text-xs text-black dark:text-zinc-300">
+            <svg className="w-4 h-4 text-emerald-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+            <span>Formatting standard met</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Left Floating Widget - AI Insight */}
+      <div 
+        className="absolute left-[5%] xl:left-[12%] top-[45%] hidden lg:flex flex-col gap-3 p-4 rounded-xl bg-white/40 dark:bg-zinc-900/40 backdrop-blur-xl border border-gray-200 dark:border-white/10 shadow-2xl dark:shadow-[0_0_40px_rgba(99,102,241,0.05)] animate-float hover:scale-105 transition-transform duration-500"
+        style={{ width: 240, animationDelay: "0.2s" }}
+      >
+         <div className="flex items-center gap-3">
+           <div className="w-8 h-8 rounded-lg bg-indigo-50 dark:bg-indigo-500/20 flex items-center justify-center text-indigo-600 dark:text-indigo-400 shrink-0">
+             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+               <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+             </svg>
+           </div>
+           <p className="text-sm font-medium text-black dark:text-white">Action Verb Enhanced</p>
+         </div>
+         <p className="text-xs text-gray-500 dark:text-zinc-400 ml-11 leading-relaxed">&quot;Spearheaded&quot; converts 40% better than &quot;Led&quot;.</p>
+      </div>
 
       <div
         style={{
@@ -504,30 +557,28 @@ function Hero() {
       >
         {/* Badge */}
         <div
-          className="animate-fade-up"
+          className="group animate-fade-up bg-white/40 dark:bg-zinc-900/50 backdrop-blur-md text-gray-500 dark:text-zinc-300 border-gray-200 dark:border-white/10 border hover:border-black/10 dark:hover:border-indigo-500/50 hover:shadow-lg dark:hover:shadow-[0_0_20px_rgba(99,102,241,0.2)] transition-all cursor-pointer relative overflow-hidden"
           style={{
             display: "inline-flex",
             alignItems: "center",
             gap: 8,
             padding: "8px 20px",
             borderRadius: 9999,
-            border: "1px solid #e5e7eb",
-            backgroundColor: "#fff",
             fontSize: 13,
             fontWeight: 500,
-            color: "#6b7280",
             marginBottom: 40,
             boxShadow: "0 1px 2px rgba(0,0,0,0.04)",
           }}
         >
+          {/* Subtle shine effect */}
+          <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 dark:via-white/10 to-transparent group-hover:animate-[shimmer_2s_infinite]" />
           <span
             style={{
               width: 8,
               height: 8,
               borderRadius: "50%",
-              backgroundColor: "#000",
             }}
-            className="animate-pulse"
+            className="animate-pulse bg-black dark:bg-white"
           />
           AI-Powered Resume Analysis
         </div>
@@ -537,23 +588,24 @@ function Hero() {
           className="animate-fade-up delay-100"
           style={{
             fontSize: "clamp(40px, 6vw, 72px)",
-            fontWeight: 700,
-            letterSpacing: "-0.03em",
+            fontWeight: 800,
+            letterSpacing: "-0.04em",
             lineHeight: 1.08,
           }}
         >
-          Your resume,
+          <span className="text-black dark:text-white drop-shadow-sm dark:drop-shadow-[0_0_15px_rgba(255,255,255,0.2)]">Your resume,</span>
           <br />
-          <span style={{ color: "#9ca3af" }}>perfected.</span>
+          <span className="bg-gradient-to-r from-emerald-500 via-teal-400 to-green-500 dark:from-indigo-400 dark:via-purple-400 dark:to-pink-400 bg-[length:200%_auto] bg-clip-text text-transparent animate-gradient inline-block mt-1 pb-2 drop-shadow-sm dark:drop-shadow-[0_0_20px_rgba(167,139,250,0.4)]">
+            perfected.
+          </span>
         </h1>
 
         {/* Subtitle */}
         <p
-          className="animate-fade-up delay-200"
+          className="animate-fade-up delay-200 text-gray-500 dark:text-zinc-400"
           style={{
             marginTop: 28,
             fontSize: "clamp(16px, 2vw, 20px)",
-            color: "#6b7280",
             maxWidth: 560,
             marginLeft: "auto",
             marginRight: "auto",
@@ -579,14 +631,12 @@ function Hero() {
         >
           <Link
             href="/upload"
-            className="group"
+            className="group relative bg-black dark:bg-white text-white dark:text-black hover:scale-105 transition-all duration-300 hover:shadow-xl dark:hover:shadow-[0_0_40px_rgba(255,255,255,0.4)] ring-1 ring-black/5 dark:ring-white/20 dark:hover:ring-white/50"
             style={{
               display: "inline-flex",
               alignItems: "center",
               justifyContent: "center",
               gap: 10,
-              backgroundColor: "#000",
-              color: "#fff",
               width: "100%",
               maxWidth: 280,
               padding: "16px 40px",
@@ -604,11 +654,10 @@ function Hero() {
             style={{
               fontSize: 16,
               fontWeight: 500,
-              color: "#6b7280",
               padding: "16px 32px",
               textDecoration: "none",
             }}
-            className="hover:text-black transition-colors"
+            className="hover:text-black dark:hover:text-white transition-colors text-gray-500 dark:text-zinc-400"
           >
             Learn more ↓
           </a>
@@ -634,6 +683,7 @@ function Hero() {
           ].map((stat) => (
             <div key={stat.label} style={{ minWidth: 100 }}>
               <p
+                className="text-black dark:text-white drop-shadow-sm dark:drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]"
                 style={{
                   fontSize: 28,
                   fontWeight: 700,
@@ -642,7 +692,7 @@ function Hero() {
               >
                 {stat.value}
               </p>
-              <p style={{ fontSize: 13, color: "#9ca3af", marginTop: 4 }}>
+              <p className="text-gray-400 dark:text-zinc-500" style={{ fontSize: 13, marginTop: 4 }}>
                 {stat.label}
               </p>
             </div>
@@ -689,18 +739,19 @@ function Features() {
         {/* Section header */}
         <div style={{ textAlign: "center", marginBottom: 80 }}>
           <p
+            className="text-gray-400 dark:text-zinc-500"
             style={{
               fontSize: 12,
               fontWeight: 500,
               letterSpacing: "0.1em",
               textTransform: "uppercase",
-              color: "#9ca3af",
               marginBottom: 12,
             }}
           >
             Features
           </p>
           <h2
+            className="text-black dark:text-white"
             style={{
               fontSize: "clamp(28px, 4vw, 40px)",
               fontWeight: 700,
@@ -710,8 +761,8 @@ function Features() {
             Everything you need
           </h2>
           <p
+            className="text-gray-500 dark:text-zinc-400"
             style={{
-              color: "#6b7280",
               marginTop: 16,
               maxWidth: 448,
               marginLeft: "auto",
@@ -734,23 +785,20 @@ function Features() {
           {features.map((feature) => (
             <div
               key={feature.title}
-              className="group hover:shadow-xl hover:shadow-black/[0.03] transition-all duration-300"
+              className="group hover:-translate-y-2 hover:shadow-2xl hover:shadow-black/[0.04] dark:hover:shadow-[0_0_40px_rgba(255,255,255,0.06)] transition-all duration-500 bg-white dark:bg-zinc-900/40 dark:backdrop-blur-xl border-gray-200 dark:border-white/10 dark:hover:border-white/30 border relative overflow-hidden"
               style={{
                 padding: 32,
                 borderRadius: 16,
-                border: "1px solid #e5e7eb",
-                backgroundColor: "#fff",
               }}
             >
+              <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/0 via-transparent to-purple-500/0 dark:group-hover:from-indigo-500/10 dark:group-hover:to-purple-500/10 transition-colors duration-500" />
               {/* Icon */}
               <div
-                className="group-hover:bg-black group-hover:text-white group-hover:border-black transition-all duration-300"
+                className="group-hover:bg-black group-hover:text-white group-hover:border-black dark:group-hover:bg-white dark:group-hover:text-black transition-all duration-300 bg-gray-50 dark:bg-zinc-800/80 border-gray-100 dark:border-white/5 border dark:text-zinc-300 group-hover:animate-float group-hover:shadow-[0_0_20px_rgba(0,0,0,0.1)] dark:group-hover:shadow-[0_0_20px_rgba(255,255,255,0.2)] relative z-10"
                 style={{
                   width: 56,
                   height: 56,
                   borderRadius: 12,
-                  backgroundColor: "#f9fafb",
-                  border: "1px solid #f3f4f6",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -760,10 +808,10 @@ function Features() {
                 <feature.icon className="w-6 h-6" />
               </div>
 
-              <h3 style={{ fontSize: 18, fontWeight: 600, marginBottom: 8 }}>
+              <h3 className="text-black dark:text-white" style={{ fontSize: 18, fontWeight: 600, marginBottom: 8 }}>
                 {feature.title}
               </h3>
-              <p style={{ color: "#6b7280", fontSize: 14, lineHeight: 1.7 }}>
+              <p className="text-gray-500 dark:text-zinc-400" style={{ fontSize: 14, lineHeight: 1.7 }}>
                 {feature.description}
               </p>
             </div>
@@ -803,24 +851,26 @@ function HowItWorks() {
   return (
     <section
       id="how-it-works"
-      style={{ padding: "96px 0", backgroundColor: "rgba(249,250,251,0.6)" }}
+      className="bg-gray-50/60 dark:bg-zinc-950/50 dark:border-t dark:border-white/5"
+      style={{ padding: "96px 0" }}
     >
       <div style={containerNarrowStyle}>
         {/* Section header */}
         <div style={{ textAlign: "center", marginBottom: 80 }}>
           <p
+            className="text-gray-400 dark:text-zinc-500"
             style={{
               fontSize: 12,
               fontWeight: 500,
               letterSpacing: "0.1em",
               textTransform: "uppercase",
-              color: "#9ca3af",
               marginBottom: 12,
             }}
           >
             Process
           </p>
           <h2
+            className="text-black dark:text-white"
             style={{
               fontSize: "clamp(28px, 4vw, 40px)",
               fontWeight: 700,
@@ -830,8 +880,8 @@ function HowItWorks() {
             Three simple steps
           </h2>
           <p
+            className="text-gray-500 dark:text-zinc-400"
             style={{
-              color: "#6b7280",
               marginTop: 16,
               maxWidth: 448,
               marginLeft: "auto",
@@ -855,11 +905,11 @@ function HowItWorks() {
             <div key={item.step} style={{ textAlign: "center" }}>
               {/* Step number */}
               <span
+                className="text-gray-100 dark:text-white/5"
                 style={{
                   fontSize: 100,
                   fontWeight: 700,
                   lineHeight: 1,
-                  color: "#f3f4f6",
                   display: "block",
                   userSelect: "none",
                 }}
@@ -869,28 +919,26 @@ function HowItWorks() {
 
               {/* Icon */}
               <div
+                className="bg-black dark:bg-white text-white dark:text-black shadow-[0_4px_12px_rgba(0,0,0,0.1)] dark:shadow-[0_0_25px_rgba(255,255,255,0.15)] ring-4 ring-white dark:ring-zinc-950"
                 style={{
                   width: 64,
                   height: 64,
                   borderRadius: "50%",
-                  backgroundColor: "#000",
-                  color: "#fff",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
                   margin: "-32px auto 24px",
-                  boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
                 }}
               >
                 <item.icon className="w-7 h-7" />
               </div>
 
-              <h3 style={{ fontSize: 20, fontWeight: 600, marginBottom: 12 }}>
+              <h3 className="text-black dark:text-white" style={{ fontSize: 20, fontWeight: 600, marginBottom: 12 }}>
                 {item.title}
               </h3>
               <p
+                className="text-gray-500 dark:text-zinc-400"
                 style={{
-                  color: "#6b7280",
                   fontSize: 15,
                   lineHeight: 1.7,
                   maxWidth: 280,
@@ -915,9 +963,9 @@ function CTA() {
     <section style={{ padding: "96px 0" }}>
       <div style={{ ...containerNarrowStyle, maxWidth: 896 }}>
         <div
+          className="bg-black dark:bg-zinc-900/40 dark:backdrop-blur-xl dark:border dark:border-white/10 dark:shadow-[0_0_40px_rgba(255,255,255,0.05)] text-white"
           style={{
             position: "relative",
-            backgroundColor: "#000",
             borderRadius: 24,
             padding: "80px 40px",
             textAlign: "center",
@@ -937,10 +985,10 @@ function CTA() {
 
           <div style={{ position: "relative" }}>
             <h2
+              className="text-white drop-shadow-sm dark:drop-shadow-[0_0_15px_rgba(255,255,255,0.2)]"
               style={{
                 fontSize: "clamp(28px, 4vw, 48px)",
                 fontWeight: 700,
-                color: "#fff",
                 letterSpacing: "-0.02em",
                 lineHeight: 1.2,
               }}
@@ -950,8 +998,8 @@ function CTA() {
               your resume?
             </h2>
             <p
+              className="text-gray-400 dark:text-zinc-300"
               style={{
-                color: "#9ca3af",
                 marginTop: 20,
                 maxWidth: 512,
                 marginLeft: "auto",
@@ -964,14 +1012,12 @@ function CTA() {
             </p>
             <Link
               href="/upload"
-              className="group"
+              className="group bg-white dark:bg-white/10 text-black dark:text-white border dark:border-white/20 hover:scale-105 dark:hover:bg-white/20 transition-all duration-300 hover:shadow-xl dark:hover:shadow-[0_0_30px_rgba(255,255,255,0.2)]"
               style={{
                 display: "inline-flex",
                 alignItems: "center",
                 gap: 10,
                 marginTop: 40,
-                backgroundColor: "#fff",
-                color: "#000",
                 padding: "16px 40px",
                 borderRadius: 9999,
                 fontSize: 16,
@@ -980,7 +1026,7 @@ function CTA() {
               }}
             >
               Start for free
-              <ArrowRightIcon className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
+              <ArrowRightIcon className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </Link>
           </div>
         </div>
@@ -993,7 +1039,7 @@ function CTA() {
 
 function Footer() {
   return (
-    <footer style={{ borderTop: "1px solid #e5e7eb", padding: "48px 0" }}>
+    <footer className="border-t border-gray-200 dark:border-gray-800" style={{ padding: "48px 0" }}>
       <div
         style={{
           ...containerStyle,
@@ -1007,17 +1053,17 @@ function Footer() {
         {/* Logo */}
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <div
+            className="bg-black dark:bg-white"
             style={{
               width: 28,
               height: 28,
-              backgroundColor: "#000",
               borderRadius: 6,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
             }}
           >
-            <span style={{ color: "#fff", fontWeight: 700, fontSize: 11 }}>
+            <span className="text-white dark:text-black" style={{ fontWeight: 700, fontSize: 11 }}>
               IQ
             </span>
           </div>
@@ -1036,19 +1082,19 @@ function Footer() {
             color: "#9ca3af",
           }}
         >
-          <a href="#features" className="hover:text-black transition-colors">
+          <a href="#features" className="hover:text-black dark:hover:text-white transition-colors">
             Features
           </a>
           <a
             href="#how-it-works"
-            className="hover:text-black transition-colors"
+            className="hover:text-black dark:hover:text-white transition-colors"
           >
             How It Works
           </a>
-          <Link href="/login" className="hover:text-black transition-colors">
+          <Link href="/login" className="hover:text-black dark:hover:text-white transition-colors">
             Login
           </Link>
-          <Link href="/signup" className="hover:text-black transition-colors">
+          <Link href="/signup" className="hover:text-black dark:hover:text-white transition-colors">
             Sign Up
           </Link>
         </div>
@@ -1066,7 +1112,7 @@ function Footer() {
 
 export default function Home() {
   return (
-    <>
+    <div className="bg-gradient-to-br from-slate-100 via-slate-50 to-white dark:from-zinc-950 dark:via-zinc-900 dark:to-zinc-950 min-h-screen animate-fade-in transition-colors duration-500">
       <Navbar />
       <main>
         <Hero />
@@ -1075,6 +1121,6 @@ export default function Home() {
         <CTA />
       </main>
       <Footer />
-    </>
+    </div>
   );
 }
